@@ -1,9 +1,4 @@
-/**
- * # Bonniernews GCP Github terraform module
- *
- * This module allows you to create an service account to work as workload identity for a github repo to interact with specified project.
- * 
- */
+
 terraform {
   required_providers {
     github = {

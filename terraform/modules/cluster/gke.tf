@@ -13,8 +13,6 @@ resource "google_container_cluster" "gke_cluster" {
   location = var.location
   project  = var.project_id
   enable_autopilot = true
-
-
    private_cluster_config {
     enable_private_endpoint = true
     enable_private_nodes    = true
