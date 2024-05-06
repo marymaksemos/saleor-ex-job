@@ -1,4 +1,4 @@
-resource "google_sql_database_instance" "postgres_pvp_instance_name" {
+/* resource "google_sql_database_instance" "postgres_pvp_instance_name" {
   name             = "postgres-pvp-instance-name"
   region           = "asia-northeast1"
   database_version = "POSTGRES_14"
@@ -34,28 +34,17 @@ resource "google_sql_user" "user" {
   password = random_password.pwd.result
 }
 
-
+ */
 
 ##################################################################
 ##########################################################33333333333333
-terraform {
-  required_version = ">= 1.4.6"
-  backend "gcs" {
-    bucket = "dagens-nyheter-terraform-states"
-    prefix = "pg-prod"
-  }
-}
 
-provider "google" {
-  project = "infra-dagens-nyheter-f67x"
-  region  = "europe-west1"
-}
 
-# https://console.cloud.google.com/sql/instances/dn-db-prod/overview?project=infra-dagens-nyheter-f67x
-resource "google_sql_database_instance" "dn-db" {
+
+resource "google_sql_database_instance" "saleor-db" {
   database_version    = "POSTGRES_14"
   deletion_protection = true
-  name                = "dn-db-prod"
+  name                = "saleor-db-prod"
 
   settings {
     tier              = "db-custom-2-7680"
@@ -66,10 +55,10 @@ resource "google_sql_database_instance" "dn-db" {
 
     ip_configuration {
       ipv4_enabled    = false
-      private_network = "projects/bn-infra-9a5e/global/networks/bn-infra-vpc"
+      private_network = var.private_network
       authorized_networks {
         name  = "devnetwork"
-        value = "193.180.57.64/28"
+        value = "213.89.236.167/32"
       }
     }
 
@@ -90,31 +79,28 @@ resource "google_sql_database_instance" "dn-db" {
     }
   }
 }
-
-resource "google_sql_user" "dn-prod" {
-  name     = "dn-prod"
-  instance = google_sql_database_instance.dn-db.name
-  password = data.google_secret_manager_secret_version.pg-dn-prod.secret_data
+data "google_secret_manager_secret_version" "pg-saleor-prod" {
+  secret = "pg-saleor-prod"
 }
 
-data "google_secret_manager_secret_version" "pg-dn-prod" {
-  secret = "pg-dn-prod"
+resource "google_sql_user" "saleor-prod" {
+  name     = "saleor-prod"
+  instance = google_sql_database_instance.saleor-db.name
+  password = data.google_secret_manager_secret_version.pg-saleor-prod.secret_data
 }
 
-resource "google_sql_database" "dn-user-prod" {
-  name     = "dn-user-prod"
-  instance = google_sql_database_instance.dn-db.name
+
+
+resource "google_sql_database" "saleor-user-prod" {
+  name     = "saleor-user-prod"
+  instance = google_sql_database_instance.saleor-db.name
 }
 
-resource "google_sql_database" "dn-internal-prod" {
-  name     = "dn-internal-prod"
-  instance = google_sql_database_instance.dn-db.name
-}
 
-resource "google_dns_record_set" "dns" {
-  name         = "postgres-prod.dn.bn.nr."
-  type         = "A"
-  ttl          = 300
-  managed_zone = "bnnr"
-  rrdatas      = [google_sql_database_instance.dn-db.private_ip_address]
-}
+# resource "google_dns_record_set" "dns" {
+#   name         = "postgres-prod.allistore.uk."
+#   type         = "A"
+#   ttl          = 300
+#   managed_zone = "bnnr"######
+#   rrdatas      = [google_sql_database_instance.saleor-db.private_ip_address]
+# }

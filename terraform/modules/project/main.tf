@@ -15,10 +15,7 @@ resource "google_project" "project" {
 
 }
 
-resource "google_project_service" "cloud_run_api" {
-  service = "run.googleapis.com"
-  project = google_project.project.project_id
-}
+
 
 
 resource "google_project_service" "gke_service" {
@@ -169,4 +166,13 @@ resource "google_project_service" "iam_credentials" {
 resource "google_project_service" "cloud_build" {
   service = "cloudbuild.googleapis.com"
   project = google_project.project.project_id
+}
+resource "google_project_service" "redis" {
+  service = "redis.googleapis.com"
+   project = google_project.project.project_id
+}
+
+resource "google_project_service" "service_networking" {
+  project = var.project_id
+  service = "servicenetworking.googleapis.com"
 }

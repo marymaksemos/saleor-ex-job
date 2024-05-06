@@ -1,57 +1,106 @@
-// Configure the terraform google provider
 terraform {
   required_providers {
-    google = {}
-   }
-}
-
-// Create a secret containing the personal access token and grant permissions to the Service Agent
-resource "google_secret_manager_secret" "github_token_secret" {
-    project =  PROJECT_ID
-    secret_id = SECRET_ID
-
-    replication {
-        automatic = true
+    github = {
+      source  = "integrations/github"
+      version = "~> 5.0"
     }
-}
-
-resource "google_secret_manager_secret_version" "github_token_secret_version" {
-    secret = google_secret_manager_secret.github_token_secret.id
-    secret_data = GITHUB_PAT
-}
-
-data "google_iam_policy" "serviceagent_secretAccessor" {
-    binding {
-        role = "roles/secretmanager.secretAccessor"
-        members = ["serviceAccount:service-PROJECT_NUMBER@gcp-sa-cloudbuild.iam.gserviceaccount.com"]
+    google = {
+      source  = "hashicorp/google"
+      version = "~> 5.26"
     }
-}
-
-resource "google_secret_manager_secret_iam_policy" "policy" {
-  project = google_secret_manager_secret.github_token_secret.project
-  secret_id = google_secret_manager_secret.github_token_secret.secret_id
-  policy_data = data.google_iam_policy.serviceagent_secretAccessor.policy_data
-}
-
-// Create the GitHub connection
-resource "google_cloudbuildv2_connection" "my_connection" {
-    project = PROJECT_ID
-    location = REGION
-    name = CONNECTION_NAME
- 
-    github_config {
-        app_installation_id = INSTALLATION_ID
-        authorizer_credential {
-            oauth_token_secret_version = google_secret_manager_secret_version.github_token_secret_version.id
-        }
+    google-beta = {
+      source  = "hashicorp/google-beta"
+      version = "~> 5.26"
     }
-    depends_on = [google_secret_manager_secret_iam_policy.policy]
-}
-
-    resource "google_cloudbuildv2_repository" "my_repository" {
-      project = "PROJECT_ID"
-      location = "REGION"
-      name = "REPO_NAME"
-      parent_connection = google_cloudbuildv2_connection.my_connection.name
-      remote_uri = "URI"
   }
+}
+
+provider "google" {
+  project = var.project_id
+}
+
+provider "google-beta" {
+  project = var.project_id
+}
+
+provider "github" {
+  token        = var.github_token
+  owner        = var.github_username
+}
+
+resource "google_project_service" "iam_credentials" {
+  project = var.project_id
+  service = "iamcredentials.googleapis.com"
+}
+
+resource "google_service_account" "github_identity" {
+  account_id   = "github-identity"
+  display_name = "Workload Identity for GitHub"
+  project      = var.project_id
+}
+
+resource "google_iam_workload_identity_pool" "github_identity" {
+  provider                  = google-beta
+  workload_identity_pool_id = "github-identity-pool"
+  project                   = var.project_id
+}
+
+
+resource "google_iam_workload_identity_pool_provider" "github_identity" {
+  provider                           = google-beta
+  workload_identity_pool_id          = google_iam_workload_identity_pool.github_identity.workload_identity_pool_id
+  workload_identity_pool_provider_id = "github-identity-provider"
+  project                            = var.project_id
+
+  attribute_mapping = {
+    "google.subject"       = "assertion.sub"
+    "attribute.repository" = "assertion.repository"
+    "attribute.actor"      = "assertion.actor"
+  }
+
+  oidc {
+    issuer_uri = "https://token.actions.githubusercontent.com"
+  }
+}
+
+
+resource "google_service_account_iam_binding" "github_identity_user" {
+  service_account_id = google_service_account.github_identity.name
+  role               = "roles/iam.workloadIdentityUser"
+
+  members = [
+    "principalSet://iam.googleapis.com/${google_iam_workload_identity_pool.github_identity.name}/attribute.repository/${var.github_username}/${var.repo_name}",
+  ]
+}
+
+resource "google_storage_bucket_iam_binding" "cloudbuild_storage_admin" {
+  bucket  = "${var.project_id}-cloudbuild"
+  role    = "roles/storage.admin"
+  members = [
+    "serviceAccount:${google_service_account.github_identity.email}",
+  ]
+}
+
+resource "google_project_iam_member" "service_account_permissions" {
+  for_each = toset([
+    "roles/cloudbuild.builds.builder",
+    "roles/iam.serviceAccountUser",
+    "roles/run.developer"
+  ])
+  project  = var.project_id
+  role     = each.value
+  member   = "serviceAccount:${google_service_account.github_identity.email}"
+}
+
+resource "github_actions_secret" "gcp_service_account_email" {
+  repository      = var.repo_name
+  secret_name     = "GCP_SERVICE_ACCOUNT_EMAIL"
+  plaintext_value = google_service_account.github_identity.email
+}
+
+resource "github_actions_secret" "gcp_project_id" {
+  repository      = var.repo_name
+  secret_name     = "GCP_PROJECT_ID"
+  plaintext_value = var.project_id
+}
+
