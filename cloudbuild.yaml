@@ -1,0 +1,48 @@
+steps:
+  # Step for Saleor Core
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['builds', 'submit', '--config', 'saleor-core/cloudbuild.yaml', '${_GCS_SOURCE_STAGING_DIR}']
+    dir: 'saleor-core/'
+    id: 'Build Saleor Core'
+    waitFor: ['-']
+    entrypoint: 'bash'
+    args:
+    - '-c'
+    - |
+      if git diff --name-only $COMMIT_SHA^ $COMMIT_SHA | grep -q 'saleor-core/'; then
+        gcloud builds submit --config saleor-core/cloudbuild.yaml .
+      else
+        echo "Skipping Saleor Core build, no changes detected."
+      fi
+
+  # Step for Saleor Dashboard
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['builds', 'submit', '--config', 'saleor-dashboard/cloudbuild.yaml', '${_GCS_SOURCE_STAGING_DIR}']
+    dir: 'dashboard/'
+    id: 'Build Saleor Dashboard'
+    waitFor: ['-']
+    entrypoint: 'bash'
+    args:
+    - '-c'
+    - |
+      if git diff --name-only $COMMIT_SHA^ $COMMIT_SHA | grep -q 'dashboard/'; then
+        gcloud builds submit --config saleor-dashboard/cloudbuild.yaml .
+      else
+        echo "Skipping Dashboard build, no changes detected."
+      fi
+
+  # Step for Saleor Storefront
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['builds', 'submit', '--config', 'saleor-storefront/cloudbuild.yaml', '${_GCS_SOURCE_STAGING_DIR}']
+    dir: 'saleor-storefront/'
+    id: 'Build Saleor Storefront'
+    waitFor: ['-']
+    entrypoint: 'bash'
+    args:
+    - '-c'
+    - |
+      if git diff --name-only $COMMIT_SHA^ $COMMIT_SHA | grep -q 'saleor-storefront/'; then
+        gcloud builds submit --config saleor-storefront/cloudbuild.yaml .
+      else
+        echo "Skipping Storefront build, no changes detected."
+      fi
