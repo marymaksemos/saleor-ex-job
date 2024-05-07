@@ -1,40 +1,44 @@
 steps:
-  # Step to set up git credentials
+  # Setup git credentials using the secret directly
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        echo "Retrieving GitHub token from Secret Manager..."
-        # Assuming 'github-token' is the secret name in Secret Manager
+        echo "Setting up Git credentials with the GitHub token..."
         GITHUB_TOKEN=$(gcloud secrets versions access latest --secret="github-token")
-        git config --global credential.helper "store --file=/root/.git-credentials"
-        echo "https://$GITHUB_TOKEN:x-oauth-basic@github.com" > /root/.git-credentials
+        git config --global credential.helper 'store --file=/root/.git-credentials'
+        echo "https://${GITHUB_TOKEN}:x-oauth-basic@github.com" > /root/.git-credentials
         
-        # Now fetch the repository
-        git fetch --unshallow
+        # Now fetch the repository with deeper history if needed
+        git fetch --unshallow || git fetch --depth=500
 
-  # Step to build the Docker image
+  # Build the Docker image from the 'saleor-core/' directory
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'build'
       - '-t'
       - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:${SHORT_SHA}'
-      - 'saleor-core/'
+      - '.'
     dir: 'saleor-core/'
 
-  # Step to push the image to Google Artifact Registry
+  # Push the built image to Google Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
     args:
       - 'push'
       - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:${SHORT_SHA}'
 
+# Specify which images to store in Container Registry
+images:
+  - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:${SHORT_SHA}'
+
+
+
+# Specify the secrets required for this build
 availableSecrets:
   secretManager:
     - versionName: projects/saleor-lab-oyqg/secrets/github-token/versions/latest
       env: 'GITHUB_TOKEN'
-
-
 
 
   # # Step 1: Build the Docker image
@@ -51,8 +55,8 @@ availableSecrets:
   #     - 'push'
   #     - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:$COMMIT_SHA'
 
-images:
-  - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:$COMMIT_SHA'
+# images:
+#   - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:$COMMIT_SHA'
 
 
 
