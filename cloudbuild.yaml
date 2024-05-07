@@ -2,12 +2,17 @@ steps:
    
   - name: 'gcr.io/cloud-builders/git'
     args: ['fetch', '--unshallow']
+
+    
   - name: 'gcr.io/cloud-builders/docker'
     args: ['build', '-t', 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:${SHORT_SHA}', 'saleor-core/']
     dir: 'saleor-core/'
   
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:${SHORT_SHA}']
+
+
+
 
   # # Step 1: Build the Docker image
   # - name: 'gcr.io/cloud-builders/docker'
