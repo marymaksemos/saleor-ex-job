@@ -1,22 +1,27 @@
 steps:
-   # Step to fetch more history for proper diff (if required)
-  - name: 'gcr.io/cloud-builders/git'
+    - name: 'gcr.io/cloud-builders/git'
     entrypoint: 'bash'
     args:
-    - '-c'
-    - |
-      if git rev-parse $COMMIT_SHA^ >/dev/null 2>&1; then
-        echo "Parent commit exists, proceeding with build checks."
-      else
-        echo "Fetching more history for diff checks..."
-        git fetch --deepen=50
+      - '-c'
+      - |
+        # Fetch more history to ensure we can access $COMMIT_SHA^
+        git fetch --depth=500
+
+        # Check if the previous commit exists
         if git rev-parse $COMMIT_SHA^ >/dev/null 2>&1; then
-          echo "History is now sufficient for diff."
+          echo "Parent commit exists, proceeding with build steps."
         else
-          echo "Still unable to find parent commit, skipping specific build steps based on paths."
-          exit 0
+          echo "Parent commit does not exist, fetching more history."
+          git fetch --unshallow
         fi
-      fi
+
+        # Now perform the intended Git operations
+        if git diff --name-only $COMMIT_SHA^ $COMMIT_SHA | grep -q 'saleor-core/'; then
+          echo "Changes detected in saleor-core, proceeding with build."
+          gcloud builds submit --config saleor-core/cloudbuild.yaml .
+        else
+          echo "No changes in saleor-core, skipping build."
+        fi
   # Step for Saleor Core
   - name: 'gcr.io/cloud-builders/gcloud'
     args: ['builds', 'submit', '--config', 'saleor-core/cloudbuild-saleor-core.yaml', '${_GCS_SOURCE_STAGING_DIR}']
