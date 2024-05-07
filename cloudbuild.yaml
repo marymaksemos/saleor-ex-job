@@ -1,16 +1,15 @@
 steps:
-   
-  - name: 'gcr.io/cloud-builders/git'
-    args: ['fetch', '--unshallow']
-
-    
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:${SHORT_SHA}', .']
+    args: ['build', '-t', 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:${SHORT_SHA}', '.']
     dir: 'saleor-core/'
-  
+
   - name: 'gcr.io/cloud-builders/docker'
     args: ['push', 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:${SHORT_SHA}']
 
+images:
+  - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:${SHORT_SHA}'
+
+timeout: '1200s'
 
 
 
@@ -28,8 +27,6 @@ steps:
   #     - 'push'
   #     - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:$COMMIT_SHA'
 
-images:
-  - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:$COMMIT_SHA'
 
 
 
