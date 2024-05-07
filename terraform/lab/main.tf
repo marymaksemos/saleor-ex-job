@@ -10,19 +10,19 @@
     }
     provider "google" {
 
-      project     = "saleor-lab-oyqg"                             
-      region      = "europe-west1"
+      project     = var.project_id                            
+      region      = var.region
     }
 
     provider "google-beta" {
       
-      project     = "saleor-lab-oyqg"                            
-      region      = "europe-west1"
+     project     = var.project_id                            
+      region      = var.region
+      
     }
 
     locals {
       name        = "saleor-lab"
-      location    = "europe-west1"
       gce_zone    = "europe-west1-b"
       environment = "lab"
       github_username= "marymaksemos"
@@ -32,15 +32,15 @@
     module "project_setup" {
       source          = "../modules/project"
       name            = local.name
-      project_id      = "saleor-lab-oyqg"
-      location        = local.location
+      project_id      = var.project_id
+      location        = var.region
     }
 
 
     module "github_integration" {
       source = "../modules/github"
-      repo_name            = "saleor-ex-job"
-      project_id           = "saleor-lab-oyqg"
+      repo_name            = var.repo_name
+      project_id           = var.project_id
       github_token         = var.github_token
       github_username      = local.github_username
     
@@ -50,13 +50,13 @@
     module "saleor_storage_prod" {
       source     = "../modules/stoarge"
       bucket_name = "saleor-storage-prod"
-      project_id  = "saleor-lab-oyqg"
+      project_id  = var.project_id
     }
 
   module "network" {
   source       = "../modules/network"
-  network_name = "saleor-network"
-  project_id   = "saleor-lab-oyqg"
+  network_name = var.network_name
+  project_id   = var.project_id
   subnets      = {
     "europe-west1" = {
       name   = "subnet-er"
@@ -74,19 +74,32 @@
     }
     module "postgres_db" {
       source = "../modules/PostgreSQL"
-      project_id           = "saleor-lab-oyqg"
-      network_name = "saleor-network"
+      project_id           = var.project_id
+      network_name = var.network_name
       private_network = module.network.private_network_uri
     }
 
 module "cluster-saleor" {
   source        = "../modules/cluster"
   name          = "saleor-cluster"
-  location      = "europe-west1"
-  project_id    = "saleor-lab-oyqg"
+  location      = var.region
+  project_id    = var.project_id
   network       = module.network.network_self_link
   subnetwork    = module.network.subnetwork_self_links["europe-west1"]
   pods_range    = module.network.subnetwork_secondary_ranges["europe-west1"].pods_range
   services_range = module.network.subnetwork_secondary_ranges["europe-west1"].services_range
 }
 
+module "github_cloud_build" {
+  source = "../modules/cloudbuild"
+
+ project_id          = var.project_id
+  github_token        = var.github_token
+  project_number      = var.project_number
+  github_pat          = var.github_pat
+  app_installation_id = var.app_installation_id
+  region              = var.region
+  name                = "github-trigger"
+  location            = "global"
+  repo_name           = "saleor-ex-job"
+}
