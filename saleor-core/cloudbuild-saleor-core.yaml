@@ -1,18 +1,31 @@
 steps:
   # Step 1: Build the Docker image
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['build', '-t', 'gcr.io/$PROJECT_ID/${_SERVICE_NAME}:${COMMIT_SHA}', '.']
+    args: [
+      'build', 
+      '-t', 
+      'us-central1-docker.pkg.dev/my-gcloud-project/my-artifacts/${_SERVICE_NAME}:${SHORT_SHA}', 
+      '-f', 
+      '${_DOCKERFILE_PATH}', 
+      '.'
+    ]
+    dir: '${_BUILD_CONTEXT}'
 
-  # Step 2: Push the image to Google Container Registry
+  # Step 2: Push the image to Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
-    args: ['push', 'gcr.io/$PROJECT_ID/${_SERVICE_NAME}:${COMMIT_SHA}']
+    args: [
+      'push', 
+      'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/${_SERVICE_NAME}:${SHORT_SHA}'
+    ]
 
- 
 substitutions:
-  _SERVICE_NAME: 'saleor-worker'  
+  _SERVICE_NAME: 'saleor-worker'
+  _DOCKERFILE_PATH: 'Dockerfile' 
+  _BUILD_CONTEXT: '.' 
 
 images:
-  - 'gcr.io/$PROJECT_ID/${_SERVICE_NAME}:${COMMIT_SHA}'
+  - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/${_SERVICE_NAME}:${SHORT_SHA}'
 
 
-timeout: '1200s'  
+tags:
+  - 'artifact-registry-push'
