@@ -27,6 +27,7 @@ steps:
     args:
       - 'push'
       - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:${SHORT_SHA}'
+      
 
 # Specify which images to store in Container Registry
 images:
