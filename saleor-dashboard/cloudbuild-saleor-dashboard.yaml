@@ -1,0 +1,19 @@
+steps:
+  # Step 1: Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['build', '-t', 'gcr.io/$PROJECT_ID/${_SERVICE_NAME}:${COMMIT_SHA}', '.']
+
+  # Step 2: Push the image to Google Container Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: ['push', 'gcr.io/$PROJECT_ID/${_SERVICE_NAME}:${COMMIT_SHA}']
+
+
+substitutions:
+  _SERVICE_NAME: 'saleor-dashboard'  
+
+# Images to be stored in the Container Registry
+images:
+  - 'gcr.io/$PROJECT_ID/${_SERVICE_NAME}:${COMMIT_SHA}'
+
+
+timeout: '1200s'  
