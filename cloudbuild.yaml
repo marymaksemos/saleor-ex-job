@@ -1,7 +1,7 @@
 steps:
   # Step for Saleor Core
   - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['builds', 'submit', '--config', 'saleor-core/cloudbuild.yaml', '${_GCS_SOURCE_STAGING_DIR}']
+    args: ['builds', 'submit', '--config', 'saleor-core/cloudbuild-saleor-core.yaml', '${_GCS_SOURCE_STAGING_DIR}']
     dir: 'saleor-core/'
     id: 'Build Saleor Core'
     waitFor: ['-']
@@ -17,7 +17,7 @@ steps:
 
   # Step for Saleor Dashboard
   - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['builds', 'submit', '--config', 'saleor-dashboard/cloudbuild.yaml', '${_GCS_SOURCE_STAGING_DIR}']
+    args: ['builds', 'submit', '--config', 'saleor-dashboard/cloudbuild-saleor-dashboard.yaml', '${_GCS_SOURCE_STAGING_DIR}']
     dir: 'dashboard/'
     id: 'Build Saleor Dashboard'
     waitFor: ['-']
@@ -33,7 +33,7 @@ steps:
 
   # Step for Saleor Storefront
   - name: 'gcr.io/cloud-builders/gcloud'
-    args: ['builds', 'submit', '--config', 'saleor-storefront/cloudbuild.yaml', '${_GCS_SOURCE_STAGING_DIR}']
+    args: ['builds', 'submit', '--config', 'saleor-storefront/cloudbuild-saleor-storefront.yaml', '${_GCS_SOURCE_STAGING_DIR}']
     dir: 'saleor-storefront/'
     id: 'Build Saleor Storefront'
     waitFor: ['-']
