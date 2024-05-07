@@ -1,16 +1,15 @@
 steps:
-  # Setup git credentials using the secret directly
+   # Setup git credentials using the secret directly
   - name: 'gcr.io/cloud-builders/gcloud'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        echo "Setting up Git credentials with the GitHub token..."
-        GITHUB_TOKEN=$(gcloud secrets versions access latest --secret="github-token")
+        # Fetch the token from Secret Manager and write it to a git credentials file
+        echo "https://${SECRET_GITHUB_TOKEN}:x-oauth-basic@github.com" > /root/.git-credentials
         git config --global credential.helper 'store --file=/root/.git-credentials'
-        echo "https://${GITHUB_TOKEN}:x-oauth-basic@github.com" > /root/.git-credentials
         
-        # Now fetch the repository with deeper history if needed
+        # Fetch the repository with deeper history if needed
         git fetch --unshallow || git fetch --depth=500
 
   # Build the Docker image from the 'saleor-core/' directory
@@ -27,7 +26,7 @@ steps:
     args:
       - 'push'
       - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:${SHORT_SHA}'
-      
+
 
 # Specify which images to store in Container Registry
 images:
@@ -39,7 +38,7 @@ images:
 availableSecrets:
   secretManager:
     - versionName: projects/saleor-lab-oyqg/secrets/github-token/versions/latest
-      env: 'GITHUB_TOKEN'
+      
 
 
   # # Step 1: Build the Docker image
