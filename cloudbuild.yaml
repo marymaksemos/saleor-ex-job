@@ -1,11 +1,31 @@
 steps:
-  # Check and Build for Saleor Core
-  - name: 'gcr.io/cloud-builders/git'
-    id: 'Check Saleor Core'
-    entrypoint: 'bash'
+  # Step 1: Build the Docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    dir: 'saleor-core'  
     args:
-    - '-c'
-    dir: 'saleor-core/'
+      - 'build'
+      - '-t'
+      - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:$COMMIT_SHA'
+      - '.' 
+  # Step 2: Push the image to Google Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:$COMMIT_SHA'
+
+images:
+  - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:$COMMIT_SHA'
+
+
+
+# steps:
+  # # Check and Build for Saleor Core
+  # - name: 'gcr.io/cloud-builders/git'
+  #   id: 'Check Saleor Core'
+  #   entrypoint: 'bash'
+  #   args:
+  #   - '-c'
+  #   dir: 'saleor-core/'
 
 #   # Check and Build for Saleor Dashboard
 #   - name: 'gcr.io/cloud-builders/git'

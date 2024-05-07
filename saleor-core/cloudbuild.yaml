@@ -1,19 +1,19 @@
-steps:
-  # Step 1: Build the Docker image
-  - name: 'gcr.io/cloud-builders/docker'
-    args:
-      - 'build'
-      - '-t'
-      - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core/$COMMIT_SHA'
-      - '-f'
-      - 'Dockerfile'  
-      - '.'
+# steps:
+#   # Step 1: Build the Docker image
+#   - name: 'gcr.io/cloud-builders/docker'
+#     args:
+#       - 'build'
+#       - '-t'
+#       - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core/$COMMIT_SHA'
+#       - '-f'
+#       - 'Dockerfile'  
+#       - '.'
 
-  # Step 2: Push the image to Google Artifact Registry
-  - name: 'gcr.io/cloud-builders/docker'
-    args:
-      - 'push'
-      - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core/$COMMIT_SHA'
+#   # Step 2: Push the image to Google Artifact Registry
+#   - name: 'gcr.io/cloud-builders/docker'
+#     args:
+#       - 'push'
+#       - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core/$COMMIT_SHA'
 
-images:
-  - 'europe-west1-docker.pkg.devsaleor-lab-oyqg/images/saleor-core/$COMMIT_SHA'
+# images:
+#   - 'europe-west1-docker.pkg.devsaleor-lab-oyqg/images/saleor-core/$COMMIT_SHA'
