@@ -1,10 +1,14 @@
+
+###################################################################################
+###################################################################################
+
 resource "google_container_cluster" "gke_cluster" {
   name       = var.name
   location   = var.location
   network    = var.network
   subnetwork = var.subnetwork
   initial_node_count = 1  
-    enable_autopilot = true
+  enable_autopilot = true
  
   # Private cluster configuration
   private_cluster_config {

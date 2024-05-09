@@ -68,16 +68,16 @@
 }
 
 
-    module "redis_instance" {
-      source         = "../modules/redis"
+    # module "redis_instance" {
+    #   source         = "../modules/redis"
     
-    }
-    module "postgres_db" {
-      source = "../modules/PostgreSQL"
-      project_id           = var.project_id
-      network_name = var.network_name
-      private_network = module.network.private_network_uri
-    }
+    # }
+    # module "postgres_db" {
+    #   source = "../modules/PostgreSQL"
+    #   project_id           = var.project_id
+    #   network_name = var.network_name
+    #   private_network = module.network.private_network_uri
+    # }
 
 module "cluster-saleor" {
   source        = "../modules/cluster"
