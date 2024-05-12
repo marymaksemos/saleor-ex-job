@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "saleor-lab-oyqg",
+  "private_key_id": "c7169311956494cd2a4f5fe2d7b0e7e4c1e57f96",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCUP6Rxf4ue5J6u\n46w9i90+yO7gJNoDNQWoNCXU37GtFAHdxWI01rSN+jTdrRvq/4wpfWR59u2xYMgY\n0h7fpDaWeD3cRnni/QTK40nhKRlmuyhDEpUfkao+uxfa67JZsTa3kcilriIRRwRg\n0j62Hai6Kkss8onk7wz0GMWfzXFBmCoWFMwUOwwjgkABA/OpBXqVCI0bO/VJlUVD\nSfrfymmUudxYpnpXeZcLz9blBR1RlJZxzHh+6cGIo7JG4t12Hr8Bdc6awBsq4Y4n\nEW5CYBIanicSlC2Loy3QC8eKSUk/lKy2AbHcC2EqGX0/Qfko28gnzrqdZ+WyQWAL\nbHNiZ64XAgMBAAECggEAHmMrOG6N9nxjQHL/l8AHEjsKp9w16elg5vkFdiyCFXmf\n5k7y0eTerqmGU5gLvHA0UT7YLR3d2/l8GoZbeLkGzXIJMBEsI8h8RoAvYR1VDRc4\n6gKxmX54uJIOEjw02yi1kAwsZjWa2xLFBXmjDB5pOvu3XBe9BzWu4IwBWj+4wtp3\nc73B+bfZNH49PhKONR038uMC/x0CeZIaTI8qtHac3VUwTlHgYAyz+36y6XxZ8Xkr\nekQYNefh7g7W0mdgzPGWpTogEXpNbY8a4CHA5kCJXhI+DlzjjUJfZJA9xjrSck2G\nkoh0ClJfWiGZV98sGA7lr0SwiulMazc8at8XSaIC6QKBgQDMquKXUb7plmVrfmHz\nNIyKcMVSh0nA734ngD/jVArRrylVSQVzgrO/nRJDgIy4KxoAyFMgVtsc3HouqJdp\nrnYgMNIPnuxzPvITeGElKKBilra64Kasuk7sKOEzoDQEwnhpyMRusmEKPMx4nJR1\nn2Qj/9KSJRB+cvFvwrQsVPzNCQKBgQC5bkKhAzSMpzZGqhC1BlgouppNPeA0IZhG\nxON6UKM4k1LitvkfanZ4HbUY5EA5+IpJ05kG3CldM3N3atZkSkRNsY2CtukCy/n9\nhagjXjFPSSPgxfF3+PWR1foUy9tqymLqwleFclv+XDjbQQygi+902p3b42VusFD7\n9E6zHCSKHwKBgCJS+mNkSz9DgMjRTj4KbxN8rCsWE1FvGNopEQ3f91yJIsZx0582\nqUyWXAzED1WHrPm6nu5Kgr7JXxhaH+KSZq8pYOFLxt3hDZokUy53LMa7/fNDX9CS\nAlBq3rHYyUCPGMCs8fyan9mmrqf/oopDa/j5m2f1HVoHjuQuZCcXLbp5AoGAOtWr\nOl9D+yTK6dzn9CgRLMsYTk3Fp4TJRhsOei6/uyGzeM/Jd5hWAoKahU1Wu44KgqYq\ntayBS1sZ1dgGMkgGKAif98uFXyfNKA2SbbZjOt7gDV+A4CoT8LPN529PLTEN9aK4\nFlVUrv4f5CFdmksMLS14TN53vokfCPJZTictyM0CgYAOiqRHg1dwAx6Jkmw58uXf\ndQWuUekWrXTu10Vw6ThWQZWnRSKglwwh/031dOrC5xvf+hD7t0DMihHOBqq+7aCI\nPknLkhpe/3RUtSWJjoFQ5ACRU6xgiYdRFqVD7Z8zX1yYJ0WrQ1wj3tJgYMAAZRhc\n3QTnvIGhineZb2EjludJ4Q==\n-----END PRIVATE KEY-----\n",
+  "client_email": "arrifctty-regstry@saleor-lab-oyqg.iam.gserviceaccount.com",
+  "client_id": "104444920710352184964",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/arrifctty-regstry%40saleor-lab-oyqg.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
