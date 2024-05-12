@@ -54,7 +54,7 @@ jobs:
           context: ./saleor-core
           file: ./saleor-core/Dockerfile
           push: true
-          tags: europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor:latest
+          tags: europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor:${{ github.sha }}
 
   build-storefront:
     needs: check-paths
@@ -80,7 +80,7 @@ jobs:
           context: ./saleor-storefront
           file: ./saleor-storefront/Dockerfile
           push: true
-          tags: europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-storefront:latest
+          tags: europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-storefront:${{ github.sha }}
 
   build-dashboard:
     needs: check-paths
@@ -106,7 +106,7 @@ jobs:
           context: ./saleor-dashboard
           file: ./saleor-dashboard/Dockerfile
           push: true
-          tags: europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-dashboard:latest
+          tags: europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-dashboard:${{ github.sha }}
           build-args: |
             API_URI=https://api.allistore.uk/graphql/
             APP_MOUNT_URI=/
@@ -114,3 +114,4 @@ jobs:
             MARKETPLACE_URL=https://apps.saleor.io/
             SALEOR_APPS_ENDPOINT=https://apps.saleor.io/api/saleor-apps
             IS_CLOUD_INSTANCE=false
+  
