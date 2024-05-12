@@ -26,7 +26,7 @@ spec:
             name: allistore-backend
         - configMapRef:
             name: allistore-common
-        image: meladsamuel/gc-spot-dashboard:v0.1
+        image: europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-dashboard:latest
         imagePullPolicy: IfNotPresent
         name: allistore-dashboard
         ports:
