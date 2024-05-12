@@ -106,7 +106,7 @@ jobs:
           context: ./saleor-dashboard
           file: ./saleor-dashboard/Dockerfile
           push: true
-          tags: europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-dashboard:${{ github.sha }}
+          tags: europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-dashboard:latest
           build-args: |
             API_URI=https://api.allistore.uk/graphql/
             APP_MOUNT_URI=/
