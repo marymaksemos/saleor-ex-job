@@ -58,6 +58,9 @@ npm i
 npm run dev
 ```
 
+
+
+
 > Note:
 > If you see CORS errors, check [CORS configuration](https://docs.saleor.io/docs/3.x/developer/running-saleor/configuration#allowed_client_hosts) of your Saleor instance or CORS settings in the Cloud Console.
 
@@ -69,3 +72,5 @@ npm run dev
 - [Usage with Docker 🐳](docs/docker.md)
 - [Sentry adapter 🗼](docs/sentry-adapter.md)
 - [Deployment 🌐](docs/deployment.md)
+
+
