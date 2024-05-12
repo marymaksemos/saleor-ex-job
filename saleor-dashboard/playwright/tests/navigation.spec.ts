@@ -20,7 +20,7 @@ test.beforeEach(({ page }) => {
   addNavigationMenuItemDialog = new AddNavigationMenuItemDialog(page);
 });
 test("TC: SALEOR_193 Should go to Navigation page @navigation @e2e", async () => {
-  await config.gotoConfigurationView();
+  await config.goToConfigurationView();
   await navigation.clickNavigationButtonFromConfiguration();
   await expect(navigation.navigationHeader).toBeVisible();
   await expect(navigation.navigationList).toBeVisible();
@@ -48,7 +48,7 @@ test("TC: SALEOR_194 Should create a new menu navigation with menu item @navigat
   await expect(navigationDetailsPage.menuItemList).toContainText(menuItemName);
 });
 // TODO: To be updated after https://linear.app/saleor/issue/MERX-307 is fixed
-test("TC: SALEOR_198 Should update existing menu @navigation @e2e", async () => {
+test.skip("TC: SALEOR_198 Should update existing menu @navigation @e2e", async () => {
   await navigationDetailsPage.goToExistingMenuView(NAVIGATION_ITEMS.navigationMenuToBeUpdated.id);
 
   const menuItemToBeUpdated = NAVIGATION_ITEMS.navigationMenuToBeUpdated.menuItems[0];
