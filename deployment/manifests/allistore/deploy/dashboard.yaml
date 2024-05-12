@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app:  allistore-dashboard
+  name: allistore-dashboard
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: allistore-dashboard
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app: allistore-dashboard
+    spec:
+      containers:
+      - envFrom:
+        - configMapRef:
+            name: allistore-backend
+        - configMapRef:
+            name: allistore-common
+        image: meladsamuel/gc-spot-dashboard:v0.1
+        imagePullPolicy: IfNotPresent
+        name: allistore-dashboard
+        ports:
+        - containerPort: 80
+          name: allistore-dash
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 500m
+            memory: 500Mi
+          requests:
+            cpu: 250m
+            memory: 250Mi
