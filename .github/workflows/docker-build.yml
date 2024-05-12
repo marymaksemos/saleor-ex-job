@@ -10,7 +10,29 @@ on:
       - 'saleor-dashboard/**'
 
 jobs:
+  check-paths:
+    runs-on: ubuntu-latest
+    outputs:
+      core-changed: ${{ steps.filter.outputs.core }}
+      storefront-changed: ${{ steps.filter.outputs.storefront }}
+      dashboard-changed: ${{ steps.filter.outputs.dashboard }}
+    steps:
+      - uses: actions/checkout@v3
+      - id: filter
+        uses: dorny/paths-filter@v2
+        with:
+          list-files: shell
+          filters: |
+            core:
+              - 'saleor-core/**'
+            storefront:
+              - 'saleor-storefront/**'
+            dashboard:
+              - 'saleor-dashboard/**'
+
   build-core:
+    needs: check-paths
+    if: ${{ needs.check-paths.outputs.core-changed == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -35,6 +57,8 @@ jobs:
           tags: europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor:latest
 
   build-storefront:
+    needs: check-paths
+    if: ${{ needs.check-paths.outputs.storefront-changed == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -59,6 +83,8 @@ jobs:
           tags: europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-storefront:latest
 
   build-dashboard:
+    needs: check-paths
+    if: ${{ needs.check-paths.outputs.dashboard-changed == 'true' }}
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -81,7 +107,6 @@ jobs:
           file: ./saleor-dashboard/Dockerfile
           push: true
           tags: europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-dashboard:latest
-
           build-args: |
             API_URI=https://api.allistore.uk/graphql/
             APP_MOUNT_URI=/
