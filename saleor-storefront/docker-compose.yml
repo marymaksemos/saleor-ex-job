@@ -1,0 +1,23 @@
+version: "3"
+
+services:
+  shivashish-storefront:
+    container_name: saleorstorefront
+    image: aaleor-storefront:$TAG
+    platform: linux/amd64
+    build:
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_SALEOR_API_URL: ${NEXT_PUBLIC_SALEOR_API_URL}
+        NEXT_PUBLIC_STOREFRONT_URL: ${NEXT_PUBLIC_STOREFRONT_URL}
+    restart: always
+    ports:
+      - 3000:3000
+    networks:
+      - saleorstorefront_network
+
+  # Add more containers below (nginx, postgres, etc.)
+
+networks:
+ saleorstorefront_network:
+    external: false

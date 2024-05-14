@@ -1,0 +1,42 @@
+fragment ProductListItem on Product {
+	id
+	name
+	slug
+	pricing {
+		priceRange {
+			start {
+				gross {
+					amount
+					currency
+				}
+			}
+			stop {
+				gross {
+					amount
+					currency
+				}
+			}
+		}
+	}
+	mediaThumbails: media {
+		id
+		alt
+		url(format: WEBP, size: 80)
+	}
+	media {
+		id
+		alt
+		url(format: WEBP, size: 1024)
+	}
+	category {
+		id
+		name
+	}
+	variants {
+		...VariantDetails
+	}
+	thumbnail(size: 1024, format: WEBP) {
+		url
+		alt
+	}
+}

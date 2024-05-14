@@ -21,3 +21,7 @@ variable "project_id" {
   type        = string
 }
 
+variable "router_region" {
+  description = "Region for the Cloud Router and Cloud NAT"
+  default     = "europe-west1"
+}

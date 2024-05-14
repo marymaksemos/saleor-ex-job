@@ -1,81 +1,25 @@
 steps:
-  # Build the Docker image
-  - name: 'gcr.io/cloud-builders/docker'
-    dir: 'saleor-core/'
-    args: 
-      - 'build'
-      - '-t'
-      - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:${SHORT_SHA}'
-      - '.'
+  # Set the new image for the Kubernetes Deployment
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args: ['set', 'image', 'deploy/saleor-core', 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:$COMMIT_SHA']
+    dir: 'deployment'
 
-  # Push the Docker image to Google Artifact Registry
-  - name: 'gcr.io/cloud-builders/docker'
-    args:
-      - 'push'
-      - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:${SHORT_SHA}'
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args: ['set', 'image', 'deploy/saleor-dashboard', 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-dashboard:$COMMIT_SHA', '--namespace=saleor']
+    dir: 'deployment'
 
-# Specify images to be stored in the Container Registry
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args: ['set', 'image', 'deploy/saleor-frontend', 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-storefront:$COMMIT_SHA', '--namespace=saleor']
+    dir: 'deployment'
+
+  # Apply all other Kubernetes configuration files (e.g., services, configmaps)
+  - name: 'gcr.io/cloud-builders/kubectl'
+    args: ['apply', '-f', '.']
+    dir: 'deployment'
+
 images:
-  - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:${SHORT_SHA}'
+  - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor:$COMMIT_SHA'
+  - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-dashboard:$COMMIT_SHA'
+  - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-storefront:$COMMIT_SHA'
 
-# Set a timeout for the build
-timeout: '1200s'
-
-
-  # # Step 1: Build the Docker image
-  # - name: 'gcr.io/cloud-builders/docker'
-  #   dir: 'saleor-core'  
-  #   args:
-  #     - 'build'
-  #     - '-t'
-  #     - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:$COMMIT_SHA'
-  #     - '.' 
-  # # Step 2: Push the image to Google Artifact Registry
-  # - name: 'gcr.io/cloud-builders/docker'
-  #   args:
-  #     - 'push'
-  #     - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:$COMMIT_SHA'
-
-
-
-
-# steps:
-  # # Check and Build for Saleor Core
-  # - name: 'gcr.io/cloud-builders/git'
-  #   id: 'Check Saleor Core'
-  #   entrypoint: 'bash'
-  #   args:
-  #   - '-c'
-  #   dir: 'saleor-core/'
-
-#   # Check and Build for Saleor Dashboard
-#   - name: 'gcr.io/cloud-builders/git'
-#     id: 'Check Saleor Dashboard'
-#     entrypoint: 'bash'
-#     args:
-#     - '-c'
-#     - |
-#       if git diff --name-only $COMMIT_SHA^ $COMMIT_SHA | grep -q 'dashboard/'; then
-#         echo "Changes detected in Dashboard, proceeding with build."
-#         gcloud builds submit --config=dashboard/cloudbuild.yaml --substitutions=_SERVICE_NAME="saleor-dashboard",_DOCKERFILE_PATH="dashboard/Dockerfile",_BUILD_CONTEXT="dashboard"
-#       else
-#         echo "No changes in Dashboard, skipping build."
-#       fi
-#     dir: 'dashboard/'
-
-#   # Check and Build for Saleor Storefront
-#   - name: 'gcr.io/cloud-builders/git'
-#     id: 'Check Saleor Storefront'
-#     entrypoint: 'bash'
-#     args:
-#     - '-c'
-#     - |
-#       if git diff --name-only $COMMIT_SHA^ $COMMIT_SHA | grep -q 'saleor-storefront/'; then
-#         echo "Changes detected in Storefront, proceeding with build."
-#         gcloud builds submit --config=saleor-storefront/cloudbuild.yaml --substitutions=_SERVICE_NAME="saleor-storefront",_DOCKERFILE_PATH="saleor-storefront/Dockerfile",_BUILD_CONTEXT="saleor-storefront"
-#       else
-#         echo "No changes in Storefront, skipping build."
-#       fi
-#     dir: 'saleor-storefront/'
-
-# timeout: '1200s'
+timeout: '1200s'  

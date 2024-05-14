@@ -1,0 +1,11 @@
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: managed-cert
+spec:
+  domains:
+    - api.allistore.uk
+    - dashboard.allistore.uk
+    - allistore.uk
+   
+    

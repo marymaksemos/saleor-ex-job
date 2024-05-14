@@ -1,0 +1,9 @@
+[
+    {
+      "origin": ["http://origin1.example.com", "http://origin2.example.com"],
+      "method": ["GET", "HEAD"],
+      "responseHeader": ["Content-Type"],
+      "maxAgeSeconds": 3600
+    }
+  ]
+  

@@ -1,0 +1,16 @@
+query FeaturedCollections($channel: String!, $first: Int!) {
+	collections(channel: $channel, first: $first, filter: { metadata: { key: "isFeatured", value: "True" } }) {
+		edges {
+			node {
+				id
+				name
+				description
+				backgroundImage(size: 256, format: WEBP) {
+					url
+					alt
+				}
+				metafields(keys: ["icon", "position", "order"])
+			}
+		}
+	}
+}
