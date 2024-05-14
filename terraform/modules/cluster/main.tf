@@ -26,6 +26,11 @@ resource "google_container_cluster" "gke_cluster" {
     display_name = "Home Network"
     cidr_block   = "213.89.236.167/32"
   }
+    cidr_blocks {
+    cidr_block   = "197.59.184.17/32" 
+    display_name = "melad-network" 
+            }
+
   }
 
    ip_allocation_policy {

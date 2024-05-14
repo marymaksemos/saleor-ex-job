@@ -1,0 +1,38 @@
+fragment MenuItem on MenuItem {
+	id
+	name
+	level
+	category {
+		id
+		slug
+		name
+		metafields(keys: ["icon"])
+	}
+	collection {
+		id
+		name
+		slug
+		metafields(keys: ["icon"])
+	}
+	page {
+		id
+		title
+		slug
+		metafields(keys: ["icon"])
+	}
+	url
+}
+
+query MenuGetBySlug($slug: String!, $channel: String!) {
+	menu(slug: $slug, channel: $channel) {
+		items {
+			...MenuItem
+			children {
+				...MenuItem
+				children {
+					...MenuItem
+				}
+			}
+		}
+	}
+}

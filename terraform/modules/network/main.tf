@@ -43,13 +43,10 @@ resource "google_compute_firewall" "ssh_and_rdp" {
     ports    = ["22", "3389"]
   }
 
-  
-   source_ranges = ["213.89.236.167/32"]
+  source_ranges = ["213.89.236.167/32"]
   target_tags   = ["ssh-access"]
 }
 
-
-# Reserve IP range for services
 resource "google_compute_global_address" "private_ip_range" {
   name          = "${var.network_name}-private-ip-range"
   purpose       = "VPC_PEERING"
@@ -57,8 +54,6 @@ resource "google_compute_global_address" "private_ip_range" {
   prefix_length = 24
   network       = google_compute_network.vpc_network.self_link
 }
-
-
 
 resource "google_service_networking_connection" "private_vpc_connection" {
   network                 = google_compute_network.vpc_network.self_link
@@ -70,10 +65,30 @@ resource "google_service_networking_connection" "private_vpc_connection" {
     google_compute_global_address.private_ip_range
   ]
 }
+
 resource "google_project_service" "service_networking" {
   service = "servicenetworking.googleapis.com"
   disable_on_destroy = false
 }
+
+resource "google_compute_router" "cloud_router" {
+  name    = "${var.network_name}-router"
+  region  = var.router_region
+  network = google_compute_network.vpc_network.self_link
+
+  bgp {
+    asn = 64514
+  }
+}
+
+resource "google_compute_router_nat" "cloud_nat" {
+  name                               = "${var.network_name}-nat"
+  router                             = google_compute_router.cloud_router.name
+  region                             = var.router_region
+  nat_ip_allocate_option             = "AUTO_ONLY"
+  source_subnetwork_ip_ranges_to_nat = "ALL_SUBNETWORKS_ALL_IP_RANGES"
+}
+
 resource "google_compute_subnetwork" "subnet_er" {
   name                     = "subnet-er"
   network                  = "projects/${var.project_id}/global/networks/saleor-network"

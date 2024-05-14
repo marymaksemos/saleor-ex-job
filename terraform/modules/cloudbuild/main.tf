@@ -61,6 +61,18 @@ resource "google_secret_manager_secret_iam_policy" "policy" {
   policy_data = data.google_iam_policy.serviceagent_secret_accessor.policy_data
 }
 
+resource "google_project_iam_member" "cloudbuild_k8s_developer" {
+  project = var.project_id
+  role    = "roles/container.developer"
+  member  = "serviceAccount:${var.project_number}@cloudbuild.gserviceaccount.com"
+}
+
+resource "google_project_iam_member" "cloudbuild_k8s_admin" {
+  project = var.project_id
+  role    = "roles/container.admin"
+  member  = "serviceAccount:${var.project_number}@cloudbuild.gserviceaccount.com"
+}
+
 resource "google_cloudbuildv2_connection" "github_connection" {
   project = var.project_id
   location = var.region

@@ -1,0 +1,40 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: saleor-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: saleor-ip
+    networking.gke.io/managed-certificates: managed-cert
+    kubernetes.io/ingress.class: "gce"
+spec:
+  rules:
+  - host: api.allistore.uk
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: allistore-api
+            port:
+              number: 8000
+  - host: dashboard.allistore.uk
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: allistore-dashboard
+            port:
+              number: 9000  
+  - host: allistore.uk
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: allistore-storefront
+            port:
+              number: 3000

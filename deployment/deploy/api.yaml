@@ -1,0 +1,62 @@
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app:  allistore-api
+  name:  allistore-api
+  namespace: default
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app:  allistore-api
+  strategy:
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app:  allistore-api
+    spec:
+      
+      containers:
+      - env:
+        - name: JAEGER_AGENT_HOST
+          value: jaeger
+        - name: DASHBOARD_URL
+          value: https://dashboard.allistore.uk/
+        - name: ALLOWED_HOSTS
+          value: '*'
+        envFrom:
+        - configMapRef:
+            name:  allistore-common
+        - configMapRef:
+            name:  allistore-backend
+        image: europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor:latest
+        imagePullPolicy: IfNotPresent
+        name:  allistore-api
+        ports:
+        - containerPort: 8000
+          name:  allistore-api
+          protocol: TCP
+
+        # resources:
+        #   limits:
+        #     cpu: 500m
+        #     memory: 512Mi
+        #   requests:
+        #     cpu: 500m
+        #     memory: 512Mi
+  
+        terminationMessagePath: /dev/termination-log
+        terminationMessagePolicy: File
+        volumeMounts:
+        - mountPath: /app/media
+          name:  allistore-media
+      restartPolicy: Always
+      volumes:
+      - emptyDir: {}
+        name:  allistore-media
