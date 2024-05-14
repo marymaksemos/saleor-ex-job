@@ -1,8 +1,10 @@
 steps:
+
   # Set the new image for the Kubernetes Deployment
   - name: 'gcr.io/cloud-builders/kubectl'
     args: ['set', 'image', 'deploy/saleor-core', 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:$COMMIT_SHA']
     dir: 'deployment'
+
   # Build the Docker image
   - name: 'gcr.io/cloud-builders/docker'
     dir: 'saleor-core/'
@@ -11,6 +13,7 @@ steps:
       - '-t'
       - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:${SHORT_SHA}'
       - '.'
+
 
   # Push the Docker image to Google Artifact Registry
   - name: 'gcr.io/cloud-builders/docker'
@@ -21,6 +24,22 @@ steps:
 # Specify images to be stored in the Container Registry
 images:
   - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:${SHORT_SHA}'
+
+# Set a timeout for the build
+timeout: '1200s'
+
+
+
+  # Push the Docker image to Google Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args:
+      - 'push'
+      - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:${SHORT_SHA}'
+
+# Specify images to be stored in the Container Registry
+images:
+  - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:${SHORT_SHA}'
+
 
 # Set a timeout for the build
 timeout: '1200s'

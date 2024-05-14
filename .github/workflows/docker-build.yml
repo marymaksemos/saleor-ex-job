@@ -82,10 +82,12 @@ jobs:
           push: true
           tags: europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-storefront:${{ github.sha }}
 
+
           build-args: |
              NEXT_PUBLIC_SALEOR_API_URL=https://api.allistore.uk/graphql/
           
              NEXT_PUBLIC_STOREFRONT_URL=http://localhost:3000
+
 
   build-dashboard:
     needs: check-paths
