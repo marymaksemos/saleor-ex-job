@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+  name: allistore-dashboard
+  namespace: default
+spec:
+  ingressClassName: traefik
+  rules:
+  - host: dashboard.allistore.uk
+    http:
+      paths:
+      - backend:
+          service:
+            name:  allistore-dashboard
+            port:
+              number: 9000
+        path: /
+        pathType: Prefix
+  tls:
+  - hosts:
+    - dashboard.allistore.uk
+    secretName:  allistore-dashboard
