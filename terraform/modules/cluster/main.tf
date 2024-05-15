@@ -11,11 +11,12 @@ resource "google_container_cluster" "gke_cluster" {
   enable_autopilot = true
  
   # Private cluster configuration
-  private_cluster_config {
-    enable_private_endpoint = false
-    enable_private_nodes    = true
-    master_ipv4_cidr_block  = "172.16.0.0/28"
-  }
+  # private_cluster_config {
+  #   enable_private_endpoint = false 
+  #   enable_private_nodes    = true   
+  #   master_ipv4_cidr_block  = "172.16.0.0/28"
+  #   public_endpoint_enabled = true   
+  # }
 
   master_authorized_networks_config {
     cidr_blocks {

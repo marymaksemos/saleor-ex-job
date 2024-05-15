@@ -99,6 +99,7 @@ module "github_cloud_build" {
   github_pat          = var.github_pat
   app_installation_id = var.app_installation_id
   region              = var.region
+  vpc_network_name    = var.network_name
   name                = "github-trigger"
   location            = "global"
   repo_name           = "saleor-ex-job"

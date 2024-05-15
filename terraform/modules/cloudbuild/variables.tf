@@ -37,3 +37,7 @@ variable "location" {
 variable "repo_name" {
   description = "The name of the GitHub repository to build."
 }
+
+variable "vpc_network_name" {
+  description = "The name of the VPC network to peer with the Cloud Build private pool"
+}

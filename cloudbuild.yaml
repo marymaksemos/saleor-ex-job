@@ -10,51 +10,11 @@ steps:
       - 'europe-west1' 
       - '--project'
       - 'saleor-lab-oyqg' 
-
     env:
       - 'CLOUDSDK_COMPUTE_REGION=europe-west1'  
       - 'CLOUDSDK_CONTAINER_CLUSTER=saleor-cluster'   
 
-  - name: 'gcr.io/cloud-builders/kubectl'
-    args:
-      - 'set'
-      - 'image'
-      - 'deployment/saleor-core'
-      - 'saleor-core=europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:$COMMIT_SHA'
-      - '--namespace=default'
-    dir: 'deployment'
-
-    env:
-      - 'CLOUDSDK_COMPUTE_REGION=europe-west1'  
-      - 'CLOUDSDK_CONTAINER_CLUSTER=saleor-cluster'  
-
-
-  - name: 'gcr.io/cloud-builders/kubectl'
-    args:
-      - 'set'
-      - 'image'
-      - 'deployment/saleor-dashboard'
-      - 'saleor-dashboard=europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-dashboard:$COMMIT_SHA' 
-      - '--namespace=default'
-    dir: 'deployment'
-
-    env:
-      - 'CLOUDSDK_COMPUTE_REGION=europe-west1'  
-      - 'CLOUDSDK_CONTAINER_CLUSTER=saleor-cluster'  
-
-  - name: 'gcr.io/cloud-builders/kubectl'
-    args:
-      - 'set'
-      - 'image'
-      - 'deployment/saleor-frontend'
-      - 'saleor-frontend=europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-storefront:$COMMIT_SHA' 
-      - '--namespace=default'
-    dir: 'deployment'
-
-    env:
-      - 'CLOUDSDK_COMPUTE_REGION=europe-west1'  
-      - 'CLOUDSDK_CONTAINER_CLUSTER=saleor-cluster'  
-
+  # Apply all Kubernetes configurations from deployment directory
   - name: 'gcr.io/cloud-builders/kubectl'
     args:
       - 'apply'
@@ -62,11 +22,50 @@ steps:
       - '.'
     dir: 'deployment'
 
+  # Update image for saleor-core
+  - name: 'gcr.io/cloud-builders/kubectl'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        if kubectl get deployment saleor-core --namespace=default; then
+          kubectl set image deployment/saleor-core saleor-core=europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:$COMMIT_SHA --namespace=default
+        fi
+    dir: 'deployment'
+    env:
+      - 'CLOUDSDK_COMPUTE_REGION=europe-west1'  
+      - 'CLOUDSDK_CONTAINER_CLUSTER=saleor-cluster'  
+
+  # Update image for saleor-dashboard
+  - name: 'gcr.io/cloud-builders/kubectl'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        if kubectl get deployment saleor-dashboard --namespace=default; then
+          kubectl set image deployment/saleor-dashboard saleor-dashboard=europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-dashboard:$COMMIT_SHA --namespace=default
+        fi
+    dir: 'deployment'
+    env:
+      - 'CLOUDSDK_COMPUTE_REGION=europe-west1'  
+      - 'CLOUDSDK_CONTAINER_CLUSTER=saleor-cluster'  
+
+  - name: 'gcr.io/cloud-builders/kubectl'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        if kubectl get deployment saleor-frontend --namespace=default; then
+          kubectl set image deployment/saleor-frontend saleor-frontend=europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-storefront:$COMMIT_SHA --namespace=default
+        fi
+    dir: 'deployment'
+    env:
+      - 'CLOUDSDK_COMPUTE_REGION=europe-west1'  
+      - 'CLOUDSDK_CONTAINER_CLUSTER=saleor-cluster'  
+
 images:
   - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:$COMMIT_SHA'
   - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-dashboard:$COMMIT_SHA'
   - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-storefront:$COMMIT_SHA'
 
-timeout: '1200s' 
-
-
+timeout: '1200s'

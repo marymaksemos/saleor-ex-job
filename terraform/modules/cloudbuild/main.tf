@@ -102,3 +102,17 @@ resource "google_cloudbuild_trigger" "github_trigger" {
   filename = "cloudbuild.yaml"
   depends_on = [google_cloudbuildv2_connection.github_connection]
 }
+
+# resource "google_cloudbuild_worker_pool" "private_pool" {
+#   name     = "private-pool"
+#   location = "europe-west1"
+#   project  = var.project_id
+
+#   worker_config {
+#     machine_type = "e2-highcpu-2"
+#   }
+
+#   network_config {
+#     peered_network = "projects/${var.project_id}/global/networks/${var.vpc_network_name}"
+#   }
+# }
