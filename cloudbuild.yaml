@@ -6,10 +6,14 @@ steps:
       - 'clusters'
       - 'get-credentials'
       - 'saleor-cluster'
-      - '--zone'
-      - 'europe-west1' 
+      -  '--region'
+      - 'europe-west1-a' 
       - '--project'
       - 'saleor-lab-oyqg' 
+
+   env:
+      - 'CLOUDSDK_COMPUTE_REGION=europe-west1'  
+      - 'CLOUDSDK_CONTAINER_CLUSTER=saleor-cluster'   
 
   - name: 'gcr.io/cloud-builders/kubectl'
     args:
@@ -20,7 +24,11 @@ steps:
       - '--namespace=default'
     dir: 'deployment'
 
-  
+    env:
+      - 'CLOUDSDK_COMPUTE_REGION=europe-west1'  
+      - 'CLOUDSDK_CONTAINER_CLUSTER=saleor-cluster'  
+
+
   - name: 'gcr.io/cloud-builders/kubectl'
     args:
       - 'set'
@@ -30,7 +38,10 @@ steps:
       - '--namespace=default'
     dir: 'deployment'
 
-  
+    env:
+      - 'CLOUDSDK_COMPUTE_REGION=europe-west1'  
+      - 'CLOUDSDK_CONTAINER_CLUSTER=saleor-cluster'  
+
   - name: 'gcr.io/cloud-builders/kubectl'
     args:
       - 'set'
@@ -40,7 +51,10 @@ steps:
       - '--namespace=default'
     dir: 'deployment'
 
-  
+    env:
+      - 'CLOUDSDK_COMPUTE_REGION=europe-west1'  
+      - 'CLOUDSDK_CONTAINER_CLUSTER=saleor-cluster'  
+
   - name: 'gcr.io/cloud-builders/kubectl'
     args:
       - 'apply'
