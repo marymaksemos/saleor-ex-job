@@ -16,11 +16,11 @@ steps:
       - 'KUBECTL_VERSION=1.27'
 
   # Apply all Kubernetes configurations from the deployment directory
-  - name: 'gcr.io/cloud-builders/kubectl'
+ - name: 'gcr.io/cloud-builders/kubectl'
     args:
       - 'apply'
       - '-f'
-      - '.'
+      - 'deployment/'
     dir: 'deployment'
     env:
       - 'CLOUDSDK_COMPUTE_REGION=europe-west1'  
