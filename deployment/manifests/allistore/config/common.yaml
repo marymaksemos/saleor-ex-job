@@ -1,8 +1,0 @@
-apiVersion: v1
-data:
-  DEFAULT_CHANNEL_SLUG: default-channel
-  STATIC_URL: https://api.allistore.uk/
-kind: ConfigMap
-metadata:
-  name: allistore-common
-  namespace: default
