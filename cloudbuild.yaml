@@ -7,31 +7,50 @@ steps:
       - 'get-credentials'
       - 'saleor-cluster'
       - '--zone'
-      - 'europe-west1'
+      - 'europe-west1' 
       - '--project'
-      - 'saleor-lab-oyqg'
-
-
+      - 'saleor-lab-oyqg' 
 
   - name: 'gcr.io/cloud-builders/kubectl'
-    args: ['set', 'image', 'deploy/saleor-core', 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:$COMMIT_SHA','--namespace=default']
+    args:
+      - 'set'
+      - 'image'
+      - 'deployment/saleor-core'
+      - 'saleor-core=europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:$COMMIT_SHA'
+      - '--namespace=default'
     dir: 'deployment'
 
+  
   - name: 'gcr.io/cloud-builders/kubectl'
-    args: ['set', 'image', 'deploy/saleor-dashboard', 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-dashboard:$COMMIT_SHA', '--namespace=default']
+    args:
+      - 'set'
+      - 'image'
+      - 'deployment/saleor-dashboard'
+      - 'saleor-dashboard=europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-dashboard:$COMMIT_SHA' 
+      - '--namespace=default'
     dir: 'deployment'
 
+  
   - name: 'gcr.io/cloud-builders/kubectl'
-    args: ['set', 'image', 'deploy/saleor-frontend', 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-storefront:$COMMIT_SHA', '--namespace=default']
+    args:
+      - 'set'
+      - 'image'
+      - 'deployment/saleor-frontend'
+      - 'saleor-frontend=europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-storefront:$COMMIT_SHA' 
+      - '--namespace=default'
     dir: 'deployment'
 
+  
   - name: 'gcr.io/cloud-builders/kubectl'
-    args: ['apply', '-f', '.']
+    args:
+      - 'apply'
+      - '-f'
+      - '.'
     dir: 'deployment'
 
 images:
-  - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor:$COMMIT_SHA'
+  - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:$COMMIT_SHA'
   - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-dashboard:$COMMIT_SHA'
   - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-storefront:$COMMIT_SHA'
 
-timeout: '1200s'  
+timeout: '1200s' 
