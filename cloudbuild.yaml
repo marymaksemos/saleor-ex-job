@@ -6,13 +6,14 @@ steps:
       - 'clusters'
       - 'get-credentials'
       - 'saleor-cluster'
-      -  '--region'
-      - 'europe-west1' 
+      - '--region'
+      - 'europe-west1'
       - '--project'
-      - 'saleor-lab-oyqg' 
+      - 'saleor-lab-oyqg'
     env:
-      - 'CLOUDSDK_COMPUTE_REGION=europe-west1'  
-      - 'CLOUDSDK_CONTAINER_CLUSTER=saleor-cluster'   
+      - 'CLOUDSDK_COMPUTE_REGION=europe-west1'
+      - 'CLOUDSDK_CONTAINER_CLUSTER=saleor-cluster'
+      - 'KUBECTL_VERSION=1.30' 
 
   # Apply all Kubernetes configurations from deployment directory
   - name: 'gcr.io/cloud-builders/kubectl'
