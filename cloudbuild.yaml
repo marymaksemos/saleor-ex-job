@@ -13,7 +13,7 @@ steps:
     env:
       - 'CLOUDSDK_COMPUTE_REGION=europe-west1'
       - 'CLOUDSDK_CONTAINER_CLUSTER=saleor-cluster'
-      - 'KUBECTL_VERSION=1.30' 
+      - 'KUBECTL_VERSION=1.27' 
 
   # Apply all Kubernetes configurations from deployment directory
   - name: 'gcr.io/cloud-builders/kubectl'
