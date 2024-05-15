@@ -15,16 +15,16 @@ steps:
       - 'CLOUDSDK_CONTAINER_CLUSTER=saleor-cluster'
       - 'KUBECTL_VERSION=1.27'
 
-  # Apply all Kubernetes configurations from the deployment directory
+  # Apply all Kubernetes configurations from the deployment directory and its subdirectories
   - name: 'gcr.io/cloud-builders/kubectl'
+    entrypoint: 'bash'
     args:
-      - 'apply'
-      - '-f'
-      - 'deployment/'
-    dir: .
+      - '-c'
+      - 'find deployment/ -type f -name "*.yaml" -or -name "*.yml" | xargs kubectl apply -f'
     env:
       - 'CLOUDSDK_COMPUTE_REGION=europe-west1'  
       - 'CLOUDSDK_CONTAINER_CLUSTER=saleor-cluster'
+
 
 #   # Update image for saleor-core
 #   - name: 'gcr.io/cloud-builders/kubectl'
