@@ -22,6 +22,9 @@ steps:
       - '-f'
       - '.'
     dir: 'deployment'
+    env:
+      - 'CLOUDSDK_COMPUTE_REGION=europe-west1'  
+      - 'CLOUDSDK_CONTAINER_CLUSTER=saleor-cluster'
 
 #   # Update image for saleor-core
 #   - name: 'gcr.io/cloud-builders/kubectl'
