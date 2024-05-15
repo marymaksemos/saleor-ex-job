@@ -1,25 +1,25 @@
-apiVersion: networking.k8s.io/v1
-kind: Ingress
+# apiVersion: networking.k8s.io/v1
+# kind: Ingress
 
-metadata:
-  annotations:
-    cert-manager.io/cluster-issuer: letsencrypt-prod
-  name: allistore-storefront
-  namespace: default
-spec:
-  ingressClassName: traefik
-  rules:
-  - host:  allistore.uk
-    http:
-      paths:
-      - backend:
-          service:
-            name:  allistore-storefront
-            port:
-              number: 3000
-        path: /
-        pathType: Prefix
-  tls:
-  - hosts:
-    -  allistore.uk
-    secretName:  allistorestorefront
+# metadata:
+#   annotations:
+#     cert-manager.io/cluster-issuer: letsencrypt-prod
+#   name: allistore-storefront
+#   namespace: default
+# spec:
+#   ingressClassName: traefik
+#   rules:
+#   - host:  allistore.uk
+#     http:
+#       paths:
+#       - backend:
+#           service:
+#             name:  allistore-storefront
+#             port:
+#               number: 3000
+#         path: /
+#         pathType: Prefix
+#   tls:
+#   - hosts:
+#     -  allistore.uk
+#     secretName:  allistorestorefront

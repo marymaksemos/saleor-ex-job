@@ -42,4 +42,3 @@ spec:
         #     cpu: 100m
         #     memory: 100Mi
         #     ephemeral-storage: 512Mi
-c
