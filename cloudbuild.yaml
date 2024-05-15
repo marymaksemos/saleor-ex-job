@@ -11,7 +11,7 @@ steps:
       - '--project'
       - 'saleor-lab-oyqg' 
 
-   env:
+    env:
       - 'CLOUDSDK_COMPUTE_REGION=europe-west1'  
       - 'CLOUDSDK_CONTAINER_CLUSTER=saleor-cluster'   
 
