@@ -13,7 +13,6 @@ steps:
     env:
       - 'CLOUDSDK_COMPUTE_REGION=europe-west1'
       - 'CLOUDSDK_CONTAINER_CLUSTER=saleor-cluster'
-      - 'KUBECTL_VERSION=1.27'
 
   - name: 'gcr.io/cloud-builders/kubectl'
     entrypoint: 'bash'
@@ -23,6 +22,7 @@ steps:
     env:
       - 'CLOUDSDK_COMPUTE_REGION=europe-west1'  
       - 'CLOUDSDK_CONTAINER_CLUSTER=saleor-cluster'
+
 
 
 #   # Update image for saleor-core
