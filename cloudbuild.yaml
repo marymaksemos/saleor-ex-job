@@ -68,3 +68,5 @@ images:
   - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-storefront:$COMMIT_SHA'
 
 timeout: '1200s' 
+
+
