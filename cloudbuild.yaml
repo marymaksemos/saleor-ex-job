@@ -21,7 +21,7 @@ steps:
       - 'apply'
       - '-f'
       - 'deployment/'
-    dir: 'deployment'
+    dir: .
     env:
       - 'CLOUDSDK_COMPUTE_REGION=europe-west1'  
       - 'CLOUDSDK_CONTAINER_CLUSTER=saleor-cluster'
