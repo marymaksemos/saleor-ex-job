@@ -1,0 +1,21 @@
+apiVersion: v1
+data:
+  google-app.json: |
+   {
+      "type": "service_account",
+      "project_id": "saleor-lab-oyqg",
+      "private_key_id": "7b39d011f02d5f6a896f352d05d41d63a1348126",
+      "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvAIBADANBgkqhkiG9w0BAQEFAASCBKYwggSiAgEAAoIBAQCukYlouf3oYjAr\nN1nLkgVLocx1s8j+Kq2t19KGQwXQQFUyYaUB5D+Ay+4EWTZ/LQ4JE1ZtQ2xg7UBS\nPTzZL4A3FobLq5HVGTExZ1ygIU5EXS2dnHXCiL8uDNqzjSJeKNLQc0Lv/ojaEywu\nMifJmBtI27ipXkXS4Ed67/BRkif0vIDTHhG0fuIOYpLCL9xkkSRo4uwxmx0C8QXh\nlFFEvqdfep0aKmujfqxMD9TEobiCXg/1aCyJE2hNnoaKLse3//qQAciQZ6z4XI4x\neag83gOZipUcqXU1FijekcjMGhmKOkwzceayi8ppS0qxMQ5gizBv0lN5A2f4xn8e\nnGFfB9+bAgMBAAECggEACLMUB/YM40HRaLXvcaerP+OmTs9Q2unBkgJJaYt5hLFQ\nDZy0Hm4DhCWljO3tO1VBd85Q5k0P35yzMeX/XEtztksXGJtKPzZsLywZf5lpTxrd\npRcg/zrVXDQjygLkjZC3QNAdq9whccy2zO6O8Qr1gSICB9682A95QHUoosgH2bhe\nGRuBFEDRFNmt6U9Ib3OwzpMEZ3BVB0895zF0zuWfS+v1JjAU6Ln7eI614RmRkGBt\nToG3Pxh2RaZkwpsmF4hgcQbC1qbKWfnuEMqEj3DHbYdHREziOTDc6r43tS527W9u\n+6Al2dlAIy9DmLrod1qvShrrSzhoBJofIazrgsSBEQKBgQDUd411mCumHnr0+BHn\nWKvAd1OhpkELWOx4m03RE4aovOe4RytPO809Ytu5jJ1B+BoYRodIOS6YsCHbiigt\nF4NysXoru4oX90dtjXEwOuHvz3M0KicmvB5s9oDt59bo7ArD7Ys/MGSSuEjkWWC/\nLmz59z5KQ9kM0yeBrgtHMDzZLQKBgQDSVhv19Pwfvsby/joJ1r4FjJ2jFO9uV2Fr\nYPnXe85RmbJR7CO1WJLZKA2B6nYRHcid8HvL8xxbIPZJabGU7gyZ8bfAJmnPQucI\n6Zd9p5UDdipxIJYswwh/5U/XBQNgmKuopAd1qClBsL4lIOfjKbgbcfpLglFzXeOs\nuITID8CI5wKBgDmSA3SfvQQQMkT6iu9i6XcHXlPo1qsad0je3CEQ52YFecxHDIc1\nrxE5HkySu3HKpld5lOKPC/83ipUQRH6jZmzHhlEfSfXgfSxELS1iZyIx1geGfIFU\na/IegST1sxf+DZS1YwvGMxpGcQne5gYnsEOzKN+6rq9477WF0WyCt5opAoGAOkBK\nwhU09f25z3YE0NC+E39b8NxNavucKUbUKo9JFmRAdFu3j/OVx7pF82Lhi9/5vXPq\ndRNBGSPJ0Y8J9TrwFnpQ71A0IYhfv6IhqFUO+cRyAJ6LuJ3S7sitEdl7k/b0I2I6\nBqWpt12ha1rvnYPiTweD0AGpWQ/5i84WR+nE4qUCgYBOB7CoTbxBZGyVpAWz+Hqt\nTmDjCGspN2P0+ZqzQKL2UVInjR43fOUa5va3cIww7W3KgkBOLFPF4J4sK1l02NtR\nxM3Hco/oKgwzCmTiAYcetC4lef9fwf4GbhdyGPtvmo9R/dk7HIkPaNb5Dat8AzPx\nAgqAdOvS8FZ+mWzLhj2acg==\n-----END PRIVATE KEY-----\n",
+      "client_email": "saleor-stoarge@saleor-lab-oyqg.iam.gserviceaccount.com",
+      "client_id": "101248453031866679855",
+      "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+      "token_uri": "https://oauth2.googleapis.com/token",
+      "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+      "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/saleor-stoarge%40saleor-lab-oyqg.iam.gserviceaccount.com",
+      "universe_domain": "googleapis.com"
+    }
+
+kind: ConfigMap
+metadata:
+  name: google-app
+  namespace: default

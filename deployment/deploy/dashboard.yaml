@@ -26,19 +26,19 @@ spec:
             name: allistore-backend
         - configMapRef:
             name: allistore-common
-        image: europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-dashboard:latest
+        image: europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-dashboard
         imagePullPolicy: IfNotPresent
         name: allistore-dashboard
         ports:
         - containerPort: 80
           name: allistore-dash
           protocol: TCP
-        # resources:
-        #   limits:
-        #     ephemeral-storage: 512Mi
-        #     cpu: 100m
-        #     memory: 100Mi
-        #   requests:
-        #     cpu: 100m
-        #     memory: 100Mi
-        #     ephemeral-storage: 512Mi
+        resources:
+          limits:
+            ephemeral-storage: 512Mi
+            cpu: 100m
+            memory: 100Mi
+          requests:
+            cpu: 100m
+            memory: 100Mi
+            ephemeral-storage: 512Mi

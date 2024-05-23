@@ -1,6 +1,6 @@
 [
     {
-      "origin": ["http://origin1.example.com", "http://origin2.example.com"],
+      "origin": ["http://allistore.uk", "http://www.allistore.uk","http://api.allistore.uk","http://dashboard.allistore.uk"],
       "method": ["GET", "HEAD"],
       "responseHeader": ["Content-Type"],
       "maxAgeSeconds": 3600

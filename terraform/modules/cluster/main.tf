@@ -31,6 +31,10 @@ resource "google_container_cluster" "gke_cluster" {
     cidr_block   = "197.59.184.17/32" 
     display_name = "melad-network" 
             }
+    cidr_blocks {
+    cidr_block   = "0.0.0.0/0" 
+    display_name = "public" 
+            }
 
   }
 

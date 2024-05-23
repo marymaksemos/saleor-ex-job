@@ -56,7 +56,14 @@ spec:
         volumeMounts:
         - mountPath: /app/media
           name:  allistore-media
+        - mountPath: /app/secret/
+          name: google-app
       restartPolicy: Always
       volumes:
       - emptyDir: {}
         name:  allistore-media
+      - configMap:
+          defaultMode: 420
+          name: google-app
+        name: google-app
+      
