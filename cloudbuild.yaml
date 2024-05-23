@@ -31,8 +31,8 @@ steps:
     args:
       - '-c'
       - |
-        if kubectl get deployment saleor-core --namespace=default; then
-          kubectl set image deployment/saleor-core saleor-dashboard=europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-dashboard:$COMMIT_SHA --namespace=default
+        if kubectl get deployment allistore-api --namespace=default; then
+          kubectl set image deployment/allistore-api   allistore-api=europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor:$COMMIT_SHA --namespace=default
         fi
     dir: 'deployment'
     env:
@@ -40,43 +40,46 @@ steps:
       - 'CLOUDSDK_CONTAINER_CLUSTER=saleor-cluster'
 
   # Update image for API deployment
-  - name: 'gcr.io/cloud-builders/kubectl'
-    args:
-      - 'set'
-      - 'image'
-      - 'deployment/api'
-      - 'api=europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:$COMMIT_SHA'
-      - '--namespace=default'
-    env:
-      - 'CLOUDSDK_COMPUTE_REGION=europe-west1'  
-      - 'CLOUDSDK_CONTAINER_CLUSTER=saleor-cluster'
-
-  # Update the image for the Worker deployment
-  - name: 'gcr.io/cloud-builders/kubectl'
-    args:
-      - 'set'
-      - 'image'
-      - 'deployment/worker'
-      - 'worker=europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:$COMMIT_SHA'
-      - '--namespace=default'
-    env:
-      - 'CLOUDSDK_COMPUTE_REGION=europe-west1'  
-      - 'CLOUDSDK_CONTAINER_CLUSTER=saleor-cluster'
-
-  # Update the image for saleor-frontend if deployment exists
-  - name: 'gcr.io/cloud-builders/kubectl'
+ - name: 'gcr.io/cloud-builders/kubectl'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-        if kubectl get deployment saleor-frontend --namespace=default; then
-          kubectl set image deployment/saleor-frontend saleor-frontend=europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-storefront:$COMMIT_SHA --namespace=default
+        if kubectl get deployment allistore-worker --namespace=default; then
+          kubectl set image deployment/allistore-worker   allistore-worker=europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor:$COMMIT_SHA --namespace=default
         fi
     dir: 'deployment'
     env:
       - 'CLOUDSDK_COMPUTE_REGION=europe-west1'  
       - 'CLOUDSDK_CONTAINER_CLUSTER=saleor-cluster'
 
+
+ - name: 'gcr.io/cloud-builders/kubectl'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        if kubectl get deployment allistore-dashboard --namespace=default; then
+          kubectl set image deployment/allistore-dashboard   allistore-dashboard=europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-dashboard:$COMMIT_SHA --namespace=default
+        fi
+    dir: 'deployment'
+    env:
+      - 'CLOUDSDK_COMPUTE_REGION=europe-west1'  
+      - 'CLOUDSDK_CONTAINER_CLUSTER=saleor-cluster'
+  
+ - name: 'gcr.io/cloud-builders/kubectl'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        if kubectl get deployment allistore-storefront--namespace=default; then
+          kubectl set image deployment/allistore-storefront   allistore-storefront=europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-storefront:$COMMIT_SHA --namespace=default
+        fi
+    dir: 'deployment'
+    env:
+      - 'CLOUDSDK_COMPUTE_REGION=europe-west1'  
+      - 'CLOUDSDK_CONTAINER_CLUSTER=saleor-cluster'
+  
 images:
   - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:$COMMIT_SHA'
   - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-dashboard:$COMMIT_SHA'
