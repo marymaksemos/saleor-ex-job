@@ -170,7 +170,7 @@ steps:
 #     - name: 'workspace'
 #       path: '/workspace'
 
-# # Define the volumes
-# volumes:
-# - name: 'workspace'
-#   path: '/workspace'
+# Define the volumes
+volumes:
+- name: 'workspace'
+  path: '/workspace'
