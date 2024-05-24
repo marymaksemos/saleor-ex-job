@@ -19,7 +19,7 @@ steps:
   args:
     - '-c'
     - |
-      if [ git diff --quiet HEAD~1 HEAD ./saleor-core ]; then
+      if git diff --quiet HEAD~1 HEAD ./saleor-core ; then
         docker build -t europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor:latest ./saleor-core
         docker push europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor:latest
       fi
@@ -64,7 +64,7 @@ steps:
   args:
     - '-c'
     - |
-      if [ git diff --quiet HEAD~1 HEAD ./saleor-core ]; then
+      if  git diff --quiet HEAD~1 HEAD ./saleor-core; then
         kubectl set image deployment/allistore-api allistore-api=europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor:latest
       fi
 
