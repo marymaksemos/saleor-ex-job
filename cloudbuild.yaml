@@ -11,63 +11,16 @@ steps:
     - '--project'
     - 'saleor-lab-oyqg'
 
-# Check if the backend directory has changes
-- name: 'alpine'
-  id: 'check-backend'
-  entrypoint: 'sh'
-  args:
-    - '-c'
-    - |
-      if git diff --quiet HEAD~1 HEAD ./saleor-core; then
-        echo "BACKEND_CHANGED=false" >> /workspace/vars
-      else
-        echo "BACKEND_CHANGED=true" >> /workspace/vars
-      fi
-
-
-# Check if the frontend directory has changes
-- name: 'alpine'
-  id: 'check-dashboard'
-  entrypoint: 'sh'
-  args:
-    - '-c'
-    - |
-      if git diff --quiet HEAD~1 HEAD ./saleor-dashboard; then
-        echo "DASHBOARD_CHANGED=false" >> /workspace/vars
-      else
-        echo "DASHBOARD_CHANGED=true" >> /workspace/vars
-      fi
-
-# Check if the app directory has changes
-- name: 'alpine'
-  id: 'check-storefront'
-  entrypoint: 'sh'
-  args:
-    - '-c'
-    - |
-      if git diff --quiet HEAD~1 HEAD ./saleor-storefront; then
-        echo "STOREFRONT_CHANGED=false" >> /workspace/vars
-      else
-        echo "STOREFRONT_CHANGED=true" >> /workspace/vars
-      fi
-
-# Load environment variables
-- name: 'alpine'
-  id: 'load-vars'
-  entrypoint: 'sh'
-  args:
-    - '-c'
-    - 'source /workspace/vars && env'
 
 # Build and push the backend Docker image if the backend has changed
 - name: 'gcr.io/cloud-builders/docker'
-  id: 'build-backend'
+  id: 'build-api'
   entrypoint: 'sh'
   args:
     - '-c'
     - |
       source /workspace/vars
-      if [ "$BACKEND_CHANGED" = "true" ]; then
+      if [ git diff --quiet HEAD~1 HEAD ./saleor-core ]; then
         docker build -t europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor:latest ./saleor-core
         docker push europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor:latest
       fi
@@ -113,7 +66,7 @@ steps:
     - '-c'
     - |
       source /workspace/vars
-      if [ "$BACKEND_CHANGED" = "true" ]; then
+      if [ git diff --quiet HEAD~1 HEAD ./saleor-core ]; then
         kubectl set image deployment/allistore-api allistore-api=europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor:latest
       fi
 
