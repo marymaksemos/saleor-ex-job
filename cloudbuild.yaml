@@ -5,8 +5,12 @@ steps:
     args:
       - '-c'
       - |
-        if git diff --name-only $COMMIT_SHA^ $COMMIT_SHA | grep -q 'saleor-core/'; then
-          gcloud builds submit --config saleor-core/saleorcore-build.yaml --substitutions=COMMIT_SHA=$COMMIT_SHA .
+        if [ "$(git rev-list --count HEAD)" -gt 1 ]; then
+          if git diff --name-only $COMMIT_SHA^ $COMMIT_SHA | grep -q 'saleor-core/'; then
+            gcloud builds submit --config saleor-core/cloudbuild.yaml --substitutions=COMMIT_SHA=$COMMIT_SHA .
+          fi
+        else
+          echo "This is the first commit, so skipping diff check."
         fi
 
   # Check changes in the saleor-dashboard directory
