@@ -24,7 +24,7 @@ spec:
       - envFrom:
         - configMapRef:
             name: allistore-common
-        image: europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-storefront:latest
+        image: europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-storefront
         imagePullPolicy: IfNotPresent
         name: allistore-storefront
         ports:

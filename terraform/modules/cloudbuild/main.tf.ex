@@ -86,7 +86,18 @@ resource "google_cloudbuildv2_connection" "github_connection" {
   }
   depends_on = [google_secret_manager_secret_iam_policy.policy]
 }
+resource "google_pubsub_topic" "artifact_registry_topic" {
+  name = "artifact-registry-topic"
+}
 
+resource "google_pubsub_topic_iam_binding" "cloud_build_publisher_binding" {
+  topic = google_pubsub_topic.artifact_registry_topic.name
+  role  = "roles/pubsub.publisher"
+
+  members = [
+    "serviceAccount:service-${var.project_number}@gcp-sa-cloudbuild.iam.gserviceaccount.com"
+  ]
+}
 resource "google_cloudbuild_trigger" "github_trigger" {
   name = "saleor-trigger"
   location = var.region
@@ -103,16 +114,3 @@ resource "google_cloudbuild_trigger" "github_trigger" {
   depends_on = [google_cloudbuildv2_connection.github_connection]
 }
 
-# resource "google_cloudbuild_worker_pool" "private_pool" {
-#   name     = "private-pool"
-#   location = "europe-west1"
-#   project  = var.project_id
-
-#   worker_config {
-#     machine_type = "e2-highcpu-2"
-#   }
-
-#   network_config {
-#     peered_network = "projects/${var.project_id}/global/networks/${var.vpc_network_name}"
-#   }
-# }
