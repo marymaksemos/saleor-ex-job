@@ -19,10 +19,9 @@ steps:
   args:
     - '-c'
     - |
-      if git diff --quiet HEAD~1 HEAD ./saleor-core ; then
         docker build -t europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor:latest ./saleor-core
         docker push europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor:latest
-      fi
+      
 
 
 # # Build and push the frontend Docker image if the frontend has changed
@@ -64,9 +63,7 @@ steps:
   args:
     - '-c'
     - |
-      if  git diff --quiet HEAD~1 HEAD ./saleor-core; then
         kubectl set image deployment/allistore-api allistore-api=europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor:latest
-      fi
 
 
 # # Deploy to GKE if the frontend has changed
