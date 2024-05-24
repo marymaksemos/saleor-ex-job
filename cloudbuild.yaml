@@ -6,30 +6,38 @@ steps:
     args:
     - '-c'
     - |
-      if git diff --name-only $COMMIT_SHA^ $COMMIT_SHA | grep -q 'saleor-core/'; then
-        echo "Changes detected in Saleor Core, proceeding with build."
-        gcloud builds submit --config=saleor-core/saleorcore-build.yaml --substitutions=_SERVICE_NAME="saleor-core",_DOCKERFILE_PATH="saleor-core/Dockerfile",_BUILD_CONTEXT="saleor-core"
+      COMMIT_COUNT=$(git rev-list --count HEAD)
+      if [ "$COMMIT_COUNT" -gt 1 ]; then
+        # Check if there are changes in the saleor-core directory since last commit
+        if git diff --name-only $COMMIT_SHA^ $COMMIT_SHA | grep -q 'saleor-core/'; then
+          echo "Changes detected in Saleor Core, proceeding with build."
+          gcloud builds submit --config=saleor-core/saleorcore-build.yaml --substitutions=_SERVICE_NAME="saleor-core",_DOCKERFILE_PATH="saleor-core/Dockerfile",_BUILD_CONTEXT="saleor-core"
+        else
+          echo "No changes in Saleor Core, skipping build."
+        fi
       else
-        echo "No changes in Saleor Core, skipping build."
+        # Handle the first commit differently
+        echo "First commit detected. Proceeding with build of all services as no historical diff is available."
+        gcloud builds submit --config=saleor-core/saleorcore-build.yaml --substitutions=_SERVICE_NAME="saleor-core",_DOCKERFILE_PATH="saleor-core/Dockerfile",_BUILD_CONTEXT="saleor-core"
       fi
     dir: 'saleor-core/'
 
-  # Check changes in the saleor-dashboard directory
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        if git diff --name-only $COMMIT_SHA^ $COMMIT_SHA | grep -q 'saleor-dashboard/'; then
-          gcloud builds submit --config saleor-dashboard/cloudbuild.yaml --substitutions=COMMIT_SHA=$COMMIT_SHA .
-        fi
+  # # Check changes in the saleor-dashboard directory
+  # - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  #   entrypoint: 'bash'
+  #   args:
+  #     - '-c'
+  #     - |
+  #       if git diff --name-only $COMMIT_SHA^ $COMMIT_SHA | grep -q 'saleor-dashboard/'; then
+  #         gcloud builds submit --config saleor-dashboard/cloudbuild.yaml --substitutions=COMMIT_SHA=$COMMIT_SHA .
+  #       fi
 
-  # Check changes in the saleor-storefront directory
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-    entrypoint: 'bash'
-    args:
-      - '-c'
-      - |
-        if git diff --name-only $COMMIT_SHA^ $COMMIT_SHA | grep -q 'saleor-storefront/'; then
-          gcloud builds submit --config saleor-storefront/cloudbuild.yaml --substitutions=COMMIT_SHA=$COMMIT_SHA .
-        fi
+  # # Check changes in the saleor-storefront directory
+  # - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  #   entrypoint: 'bash'
+  #   args:
+  #     - '-c'
+  #     - |
+  #       if git diff --name-only $COMMIT_SHA^ $COMMIT_SHA | grep -q 'saleor-storefront/'; then
+  #         gcloud builds submit --config saleor-storefront/cloudbuild.yaml --substitutions=COMMIT_SHA=$COMMIT_SHA .
+  #       fi
