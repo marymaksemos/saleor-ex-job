@@ -25,7 +25,8 @@ steps:
 
 
 
-#   # Update image for saleor-core
+
+  # Update image for API deployment
   - name: 'gcr.io/cloud-builders/kubectl'
     entrypoint: 'bash'
     args:
@@ -39,7 +40,6 @@ steps:
       - 'CLOUDSDK_COMPUTE_REGION=europe-west1'  
       - 'CLOUDSDK_CONTAINER_CLUSTER=saleor-cluster'
 
-  # Update image for API deployment
   - name: 'gcr.io/cloud-builders/kubectl'
     entrypoint: 'bash'
     args:
@@ -72,13 +72,14 @@ steps:
     args:
       - '-c'
       - |
-        if kubectl get deployment allistore-storefront--namespace=default; then
-          kubectl set image deployment/allistore-storefront   allistore-storefront=europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-storefront:$COMMIT_SHA --namespace=default
+        if kubectl get deployment allistore-storefront --namespace=default; then
+          kubectl set image deployment/allistore-storefront allistore-storefront=europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-storefront:$COMMIT_SHA --namespace=default
         fi
     dir: 'deployment'
     env:
-      - 'CLOUDSDK_COMPUTE_REGION=europe-west1'  
+      - 'CLOUDSDK_COMPUTE_REGION=europe-west1'
       - 'CLOUDSDK_CONTAINER_CLUSTER=saleor-cluster'
+
   
 images:
   - 'europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-core:$COMMIT_SHA'
