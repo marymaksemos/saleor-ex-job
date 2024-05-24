@@ -86,31 +86,32 @@ resource "google_cloudbuildv2_connection" "github_connection" {
 
   depends_on = [google_secret_manager_secret_iam_policy.policy]
 }
-
 resource "google_pubsub_topic" "artifact_registry_topic" {
   name = "artifact-registry-topic"
 }
 
-resource "google_pubsub_topic_iam_binding" "cloud_build_publisher_binding" {
+resource "google_pubsub_subscription" "artifact_registry_subscription" {
+  name  = "artifact-registry-subscription"
   topic = google_pubsub_topic.artifact_registry_topic.name
-  role  = "roles/pubsub.publisher"
 
-  members = [
-    "serviceAccount:service-${var.project_number}@gcp-sa-cloudbuild.iam.gserviceaccount.com"
-  ]
+  ack_deadline_seconds = 20
 }
 
 resource "google_cloudbuild_trigger" "artifact_registry_trigger" {
   name        = "artifact-registry-trigger"
-  location    = var.region
-  project     = var.project_id
   description = "Trigger for Artifact Registry package version creation events"
   filename    = "cloudbuild.yaml"
-   
+  
   pubsub_config {
     topic = google_pubsub_topic.artifact_registry_topic.id
+    subscription = google_pubsub_subscription.artifact_registry_subscription.id
   }
-
-  depends_on = [google_cloudbuildv2_connection.github_connection]
 }
 
+output "pubsub_topic_name" {
+  value = google_pubsub_topic.artifact_registry_topic.name
+}
+
+output "pubsub_subscription_name" {
+  value = google_pubsub_subscription.artifact_registry_subscription.name
+}

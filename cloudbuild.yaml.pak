@@ -1,0 +1,60 @@
+steps:
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args:
+      - 'container'
+      - 'clusters'
+      - 'get-credentials'
+      - 'saleor-cluster'
+      - '--region'
+      - 'europe-west1'
+      - '--project'
+      - 'saleor-lab-oyqg'
+
+  - name: 'kubectl'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        find deployment/ -type f \( -name "*.yaml" -or -name "*.yml" \) | xargs -n 1 kubectl apply -f
+
+  - name: 'kubectl'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        if kubectl get deployment allistore-api --namespace=default; then
+          kubectl set image deployment/allistore-api allistore-api=europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor:$COMMIT_SHA --namespace=default
+        fi
+
+  - name: 'kubectl'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        if kubectl get deployment allistore-worker --namespace=default; then
+          kubectl set image deployment/allistore-worker allistore-worker=europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor:$COMMIT_SHA --namespace=default
+        fi
+
+  - name: 'kubectl'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        if kubectl get deployment allistore-dashboard --namespace=default; then
+          kubectl set image deployment/allistore-dashboard allistore-dashboard=europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-dashboard:$COMMIT_SHA --namespace=default
+        fi
+
+  - name: 'kubectl'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        if kubectl get deployment allistore-storefront --namespace=default; then
+          kubectl set image deployment/allistore-storefront allistore-storefront=europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-storefront:$COMMIT_SHA --namespace=default
+        fi
+
+substitutions:
+  _COMMIT_SHA: "${_COMMIT_SHA}"
+timeout: '1200s'
+saleor-dashboard
