@@ -1,112 +1,30 @@
 steps:
-- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  entrypoint: 'gcloud'
-  args:
-    - 'container'
-    - 'clusters'
-    - 'get-credentials'
-    - 'saleor-cluster'
-    - '--region'
-    - 'europe-west1'
-    - '--project'
-    - 'saleor-lab-oyqg'
+  # Check changes in the saleor-core directory
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        if git diff --name-only $COMMIT_SHA^ $COMMIT_SHA | grep -q 'saleor-core/'; then
+          gcloud builds submit --config saleor-core/saleorcore-build.yaml --substitutions=COMMIT_SHA=$COMMIT_SHA .
+        fi
 
+  # Check changes in the saleor-dashboard directory
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        if git diff --name-only $COMMIT_SHA^ $COMMIT_SHA | grep -q 'saleor-dashboard/'; then
+          gcloud builds submit --config saleor-dashboard/cloudbuild.yaml --substitutions=COMMIT_SHA=$COMMIT_SHA .
+        fi
 
-# Build and push the backend Docker image if the backend has changed
-- name: 'gcr.io/cloud-builders/docker'
-  id: 'build-api'
-  entrypoint: 'sh'
-  args:
-    - '-c'
-    - |
-      git log
-      if git diff --quiet HEAD~1 HEAD ./saleor-core ; then
-        DOCKER_BUILDKIT=1 docker build -t europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor:latest ./saleor-core
-        docker push europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor:latest
-      fi
-
-
-# # Build and push the frontend Docker image if the frontend has changed
-# - name: 'gcr.io/cloud-builders/docker'
-#   id: 'build-frontend'
-#   entrypoint: 'sh'
-#   args:
-#     - '-c'
-#     - |
-#       source /workspace/vars
-#       if [ "$FRONTEND_CHANGED" = "true" ]; then
-#         docker build -t gcr.io/$PROJECT_ID/frontend:latest ./frontend
-#         docker push gcr.io/$PROJECT_ID/frontend:latest
-#       fi
-#   volumes:
-#     - name: 'workspace'
-#       path: '/workspace'
-
-# # Build and push the app Docker image if the app has changed
-# - name: 'gcr.io/cloud-builders/docker'
-#   id: 'build-app'
-#   entrypoint: 'sh'
-#   args:
-#     - '-c'
-#     - |
-#       source /workspace/vars
-#       if [ "$APP_CHANGED" = "true" ]; then
-#         docker build -t gcr.io/$PROJECT_ID/app:latest ./app
-#         docker push gcr.io/$PROJECT_ID/app:latest
-#       fi
-#   volumes:
-#     - name: 'workspace'
-#       path: '/workspace'
-
-# Deploy to GKE if the backend has changed
-- name: 'gcr.io/cloud-builders/kubectl'
-  id: 'deploy-api'
-  entrypoint: 'sh'
-  args:
-    - '-c'
-    - |
-      if  git diff --quiet HEAD~1 HEAD  ./saleor-core; then
-        kubectl set image deployment/allistore-api allistore-api=europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor:latest
-      fi
-
-
-# # Deploy to GKE if the frontend has changed
-# - name: 'gcr.io/cloud-builders/kubectl'
-#   id: 'deploy-frontend'
-#   entrypoint: 'sh'
-#   args:
-#     - '-c'
-#     - |
-#       source /workspace/vars
-#       if [ "$FRONTEND_CHANGED" = "true" ]; then
-#         kubectl set image deployment/frontend frontend=gcr.io/$PROJECT_ID/frontend:latest --namespace=default
-#       fi
-#   env:
-#     - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
-#     - 'CLOUDSDK_CONTAINER_CLUSTER=your-cluster-name'
-#   volumes:
-#     - name: 'workspace'
-#       path: '/workspace'
-
-# # Deploy to GKE if the app has changed
-# - name: 'gcr.io/cloud-builders/kubectl'
-#   id: 'deploy-app'
-#   entrypoint: 'sh'
-#   args:
-#     - '-c'
-#     - |
-#       source /workspace/vars
-#       if [ "$APP_CHANGED" = "true" ]; then
-#         kubectl set image deployment/app app=gcr.io/$PROJECT_ID/app:latest --namespace=default
-#       fi
-#   env:
-#     - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
-#     - 'CLOUDSDK_CONTAINER_CLUSTER=your-cluster-name'
-#   volumes:
-#     - name: 'workspace'
-#       path: '/workspace'
-
-# # Define the volumes
-# volumes:
-# - name: 'workspace'
-#   path: '/workspace'
+  # Check changes in the saleor-storefront directory
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        if git diff --name-only $COMMIT_SHA^ $COMMIT_SHA | grep -q 'saleor-storefront/'; then
+          gcloud builds submit --config saleor-storefront/cloudbuild.yaml --substitutions=COMMIT_SHA=$COMMIT_SHA .
+        fi
