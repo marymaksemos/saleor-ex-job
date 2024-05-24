@@ -5,25 +5,25 @@ steps:
     args:
     - '-c'
     - |
-      # Determine the number of commits
+      # Determine the number of commits to check if we can use git diff with a previous commit
       COMMIT_COUNT=$(git rev-list --count HEAD)
       
-      # Check if there are more than one commit to safely use git diff with COMMIT_SHA^
       if [ "$COMMIT_COUNT" -gt 1 ]; then
-        # If there are changes in the saleor-core directory between the last and current commit
+        # Check if there are changes in the saleor-core directory between the last and current commit
         if git diff --name-only $COMMIT_SHA^ $COMMIT_SHA | grep -q 'saleor-core/'; then
           echo "Changes detected in Saleor Core, proceeding with build."
-          # Submit a Cloud Build using the configuration file for saleor-core
-          gcloud builds submit --config=saleor-core/saleorcore-build.yaml --substitutions=_SERVICE_NAME="saleor-core",_DOCKERFILE_PATH="Dockerfile",_BUILD_CONTEXT="."
+          # Change to the saleor-core directory and submit a build
+          cd saleor-core
+          gcloud builds submit --config=saleorcore-build.yaml --substitutions=_SERVICE_NAME="saleor-core",_DOCKERFILE_PATH="Dockerfile"
         else
           echo "No changes in Saleor Core, skipping build."
         fi
       else
-        # Handle the first commit differently by building all services
-        echo "First commit detected. Proceeding with build of Saleor Core as no historical diff is available."
-        gcloud builds submit --config=saleor-core/saleorcore-build.yaml --substitutions=_SERVICE_NAME="saleor-core",_DOCKERFILE_PATH="Dockerfile",_BUILD_CONTEXT="."
+        # This is the first commit, build everything as there's no history to compare
+        echo "First commit detected. Proceeding with build of all components."
+        cd saleor-core
+        gcloud builds submit --config=saleorcore-build.yaml --substitutions=_SERVICE_NAME="saleor-core",_DOCKERFILE_PATH="Dockerfile"
       fi
-    dir: 'saleor-core/'
 
 
   # # Check changes in the saleor-dashboard directory
