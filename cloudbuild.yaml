@@ -1,17 +1,18 @@
 steps:
   # Check changes in the saleor-core directory
-  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  - name: 'gcr.io/cloud-builders/git'
+    id: 'Check Saleor Core'
     entrypoint: 'bash'
     args:
-      - '-c'
-      - |
-        if [ "$(git rev-list --count HEAD)" -gt 1 ]; then
-          if git diff --name-only $COMMIT_SHA^ $COMMIT_SHA | grep -q 'saleor-core/'; then
-            gcloud builds submit --config saleor-core/cloudbuild.yaml --substitutions=COMMIT_SHA=$COMMIT_SHA .
-          fi
-        else
-          echo "This is the first commit, so skipping diff check."
-        fi
+    - '-c'
+    - |
+      if git diff --name-only $COMMIT_SHA^ $COMMIT_SHA | grep -q 'saleor-core/'; then
+        echo "Changes detected in Saleor Core, proceeding with build."
+        gcloud builds submit --config=saleor-core/saleorcore-build.yaml --substitutions=_SERVICE_NAME="saleor-core",_DOCKERFILE_PATH="saleor-core/Dockerfile",_BUILD_CONTEXT="saleor-core"
+      else
+        echo "No changes in Saleor Core, skipping build."
+      fi
+    dir: 'saleor-core/'
 
   # Check changes in the saleor-dashboard directory
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
