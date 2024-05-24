@@ -64,7 +64,8 @@ steps:
   args:
     - '-c'
     - |
-      if  git diff --quiet HEAD~1 HEAD ./saleor-core; then
+      git logs
+      if  git diff --quiet HEAD~1 HEAD  ./saleor-core; then
         kubectl set image deployment/allistore-api allistore-api=europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor:latest
       fi
 
