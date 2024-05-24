@@ -172,5 +172,5 @@ steps:
 
 # Define the volumes
 volumes:
-- name: 'workspace'
-  path: '/workspace'
+  - name: 'workspace'
+    path: '/workspace'
