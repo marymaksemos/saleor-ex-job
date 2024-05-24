@@ -19,6 +19,7 @@ steps:
   args:
     - '-c'
     - |
+        ls saleor-core
         docker build -t europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor:latest ./saleor-core
         docker push europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor:latest
       
