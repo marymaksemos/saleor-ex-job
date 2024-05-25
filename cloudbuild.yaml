@@ -1,28 +1,19 @@
 steps:
+
   - name: 'gcr.io/cloud-builders/git'
+    arg: ['fetch', '--unshallow']
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     id: 'Check Saleor Core'
     entrypoint: 'bash'
     args:
-    - '-c'
-    - |
-      cd saleor/core
-      git fetch --depth=2
-      git log
-      # Determine if there are more than one commit to enable using git diff
-      if [ $(git rev-list --count HEAD) -gt 1 ]; then
-        # Check for changes in the saleor-core directory
-        if git diff --name-only $COMMIT_SHA^ $COMMIT_SHA | grep -q 'saleor-core/'; then
-          echo "Changes detected in Saleor Core, proceeding with build."
-          gcloud builds submit --config saleorcore-build.yaml
-        else
-          echo "No changes in Saleor Core, skipping build."
+      - '-c'
+      - |
+    
+        git log
+        if git diff --quiet HEAD~1 HEAD saleor-core ; then
+            gcloud builds submit --config saleor-core/saleorcore/build.yaml --substitutions=COMMIT_SHA=$COMMIT_SHA .
         fi
-      else
-        # If it's the first commit, just build everything
-        echo "First commit detected, building all components."
-        gcloud builds submit --config saleorcore-build.yaml
-      fi
-
+    
   # # Check changes in the saleor-dashboard directory
   # - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   #   entrypoint: 'bash'
