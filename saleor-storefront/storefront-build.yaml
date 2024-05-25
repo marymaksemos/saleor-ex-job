@@ -21,10 +21,12 @@ steps:
   args:
     - '-c'
     - |
-      
-        DOCKER_BUILDKIT=1 docker build -t europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-storefront:latest ./saleor-storefront
+        DOCKER_BUILDKIT=1 docker build \
+        --build-arg NEXT_PUBLIC_SALEOR_API_URL=https://api.allistore.uk/graphql/ \
+        --build-arg NEXT_PUBLIC_STOREFRONT_URL=http://localhost:3000 \
+        -t europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-storefront:latest ./saleor-storefront
         docker push europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-storefront:latest
-    
+
 - name: 'gcr.io/cloud-builders/kubectl'
   id: 'deploy-storefornt'
   entrypoint: 'sh'
