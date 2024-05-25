@@ -1,0 +1,37 @@
+steps:
+
+
+- name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+  entrypoint: 'gcloud'
+  args:
+    - 'container'
+    - 'clusters'
+    - 'get-credentials'
+    - 'saleor-cluster'
+    - '--region'
+    - 'europe-west1'
+    - '--project'
+    - 'saleor-lab-oyqg'
+
+
+# Build and push the backend Docker image if the backend has changed
+- name: 'gcr.io/cloud-builders/docker'
+  id: 'build-storefornt'
+  entrypoint: 'sh'
+  args:
+    - '-c'
+    - |
+      
+        DOCKER_BUILDKIT=1 docker build -t europe-west1-docker.pkg.dev/saleor-lab-oyqg/images//saleor-storefront:latest ./saleor-storefront
+        docker push europe-west1-docker.pkg.dev/saleor-lab-oyqg/images//saleor-storefront:latest
+    
+- name: 'gcr.io/cloud-builders/kubectl'
+  id: 'deploy-storefornt'
+  entrypoint: 'sh'
+  args:
+    - '-c'
+    - |
+     
+        kubectl set image deployment/allistore-storefornt allistore-storefront=europe-west1-docker.pkg.dev/saleor-lab-oyqg/images//saleor-storefront:latest
+  
+      

@@ -7,25 +7,22 @@ steps:
       - '-c'
       - |
        
-            gcloud builds submit --config saleor-core/saleorcore/build.yaml --substitutions=COMMIT_SHA=$COMMIT_SHA .
+            gcloud builds submit --config saleor-core/saleorcore-build.yaml --substitutions=COMMIT_SHA=$COMMIT_SHA .
       
     
-  # # Check changes in the saleor-dashboard directory
-  # - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  #   entrypoint: 'bash'
-  #   args:
-  #     - '-c'
-  #     - |
-  #       if git diff --name-only $COMMIT_SHA^ $COMMIT_SHA | grep -q 'saleor-dashboard/'; then
-  #         gcloud builds submit --config saleor-dashboard/cloudbuild.yaml --substitutions=COMMIT_SHA=$COMMIT_SHA .
-  #       fi
+  # Check changes in the saleor-dashboard directory
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+          gcloud builds submit --config saleor-dashboard/dashboard-build.yaml --substitutions=COMMIT_SHA=$COMMIT_SHA .
+        
 
-  # # Check changes in the saleor-storefront directory
-  # - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
-  #   entrypoint: 'bash'
-  #   args:
-  #     - '-c'
-  #     - |
-  #       if git diff --name-only $COMMIT_SHA^ $COMMIT_SHA | grep -q 'saleor-storefront/'; then
-  #         gcloud builds submit --config saleor-storefront/cloudbuild.yaml --substitutions=COMMIT_SHA=$COMMIT_SHA .
-  #       fi
+  # Check changes in the saleor-storefront directory
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+          gcloud builds submit --config saleor-storefront/storefront-build.yaml --substitutions=COMMIT_SHA=$COMMIT_SHA .
