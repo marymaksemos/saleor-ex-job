@@ -5,8 +5,7 @@ steps:
     args:
     - '-c'
     - |
-      # Navigate to the correct directory
-      cd saleor-core
+     
 
       # Determine if there are more than one commit to enable using git diff
       if [ $(git rev-list --count HEAD) -gt 1 ]; then
