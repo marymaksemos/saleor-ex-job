@@ -34,6 +34,6 @@ steps:
     - '-c'
     - |
      
-        kubectl set image deployment/allistore-storefornt allistore-storefront=europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-storefront:latest
+        kubectl set image deployment/allistore-storefront allistore-storefront=europe-west1-docker.pkg.dev/saleor-lab-oyqg/images/saleor-storefront:latest
   
       
