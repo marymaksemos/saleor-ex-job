@@ -5,7 +5,7 @@ steps:
     args:
     - '-c'
     - |
-      # Determine the number of commits to check if we can use git diff with a previous commit
+      # Determine the number of commits to see if we can use git diff with a previous commit
       COMMIT_COUNT=$(git rev-list --count HEAD)
       
       if [ "$COMMIT_COUNT" -gt 1 ]; then
@@ -14,7 +14,7 @@ steps:
           echo "Changes detected in Saleor Core, proceeding with build."
           # Change to the saleor-core directory and submit a build
           cd saleor-core
-          gcloud builds submit --config=saleorcore-build.yaml --substitutions=_SERVICE_NAME="saleor-core",_DOCKERFILE_PATH="Dockerfile"
+          gcloud builds submit --config saleorcore-build.yaml
         else
           echo "No changes in Saleor Core, skipping build."
         fi
@@ -22,7 +22,7 @@ steps:
         # This is the first commit, build everything as there's no history to compare
         echo "First commit detected. Proceeding with build of all components."
         cd saleor-core
-        gcloud builds submit --config=saleorcore-build.yaml --substitutions=_SERVICE_NAME="saleor-core",_DOCKERFILE_PATH="Dockerfile"
+        gcloud builds submit --config saleorcore-build.yaml
       fi
 
 
