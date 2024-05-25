@@ -7,7 +7,7 @@ steps:
       - '-c'
       - |
        
-            gcloud builds submit --config saleor-core/saleorcore-build.yaml --substitutions=COMMIT_SHA=$COMMIT_SHA .
+            gcloud builds submit --config ./saleor-core/saleorcore-build.yaml --substitutions=COMMIT_SHA=$COMMIT_SHA .
       
     
   # Check changes in the saleor-dashboard directory
@@ -26,3 +26,5 @@ steps:
       - '-c'
       - |
           gcloud builds submit --config saleor-storefront/storefront-build.yaml --substitutions=COMMIT_SHA=$COMMIT_SHA .
+substitutions:
+  _SHORT_SHA: '${SHORT_SHA}'
