@@ -1,4 +1,14 @@
 steps:
+- name: 'gcr.io/cloud-builders/git'
+  id: 'list-directory'
+  entrypoint: 'bash'
+  args:
+    - '-c'
+    - |
+      echo "Listing the current directory contents:"
+      pwd
+      ls -lah
+
 - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
   entrypoint: 'gcloud'
   args:

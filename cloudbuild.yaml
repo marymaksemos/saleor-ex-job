@@ -1,16 +1,16 @@
 steps:
 
-  - id: 'fetch more history'
-    name: gcr.io/cloud-builders/git
-    entrypoint: bash
-    args:
-      - -c
-      - |
-        git remote set-url origin 'git@github.com:marymaksemos/saleor-ex-job'
-        git fetch --depth=300
-    volumes:
-    - name: 'ssh'
-      path: /root/.ssh
+  # - id: 'fetch more history'
+  #   name: gcr.io/cloud-builders/git
+  #   entrypoint: bash
+  #   args:
+  #     - -c
+  #     - |
+  #       git remote set-url origin 'git@github.com:marymaksemos/saleor-ex-job'
+  #       git fetch --depth=300
+  #   volumes:
+  #   - name: 'ssh'
+  #     path: /root/.ssh
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     id: 'Check Saleor Core'
     entrypoint: 'bash'
