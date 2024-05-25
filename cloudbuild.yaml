@@ -26,6 +26,6 @@ steps:
       - '-c'
       - |
           gcloud builds submit --config saleor-storefront/storefront-build.yaml  .
-${SHORT_SHA}
-substitutions:
-  _SHORT_SHA: 'latest'
+
+  substitutions:
+    _SHORT_SHA: '${SHORT_SHA}'
