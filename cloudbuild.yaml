@@ -5,26 +5,23 @@ steps:
     args:
     - '-c'
     - |
-      # Determine the number of commits to see if we can use git diff with a previous commit
-      COMMIT_COUNT=$(git rev-list --count HEAD)
-      
-      if [ "$COMMIT_COUNT" -gt 1 ]; then
-        # Check if there are changes in the saleor-core directory between the last and current commit
+      # Navigate to the correct directory
+      cd saleor-core
+
+      # Determine if there are more than one commit to enable using git diff
+      if [ $(git rev-list --count HEAD) -gt 1 ]; then
+        # Check for changes in the saleor-core directory
         if git diff --name-only $COMMIT_SHA^ $COMMIT_SHA | grep -q 'saleor-core/'; then
           echo "Changes detected in Saleor Core, proceeding with build."
-          # Change to the saleor-core directory and submit a build
-          cd saleor-core
           gcloud builds submit --config saleorcore-build.yaml
         else
           echo "No changes in Saleor Core, skipping build."
         fi
       else
-        # This is the first commit, build everything as there's no history to compare
-        echo "First commit detected. Proceeding with build of all components."
-        cd saleor-core
+        # If it's the first commit, just build everything
+        echo "First commit detected, building all components."
         gcloud builds submit --config saleorcore-build.yaml
       fi
-
 
   # # Check changes in the saleor-dashboard directory
   # - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
