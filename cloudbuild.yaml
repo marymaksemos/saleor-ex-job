@@ -5,6 +5,7 @@ steps:
     args:
     - '-c'
     - |
+      cd saleor/core
       git fetch --depth=2
       git log
       # Determine if there are more than one commit to enable using git diff
