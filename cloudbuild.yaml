@@ -5,8 +5,8 @@ steps:
     args:
     - '-c'
     - |
-     
-
+      git fetch --depth=2
+      git log
       # Determine if there are more than one commit to enable using git diff
       if [ $(git rev-list --count HEAD) -gt 1 ]; then
         # Check for changes in the saleor-core directory
