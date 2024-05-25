@@ -1,27 +1,14 @@
 steps:
 
-  # - id: 'fetch more history'
-  #   name: gcr.io/cloud-builders/git
-  #   entrypoint: bash
-  #   args:
-  #     - -c
-  #     - |
-  #       git remote set-url origin 'git@github.com:marymaksemos/saleor-ex-job'
-  #       git fetch --depth=300
-  #   volumes:
-  #   - name: 'ssh'
-  #     path: /root/.ssh
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     id: 'Check Saleor Core'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-    
-        git log
-        if git diff --quiet HEAD~1 HEAD saleor-core ; then
+       
             gcloud builds submit --config saleor-core/saleorcore/build.yaml --substitutions=COMMIT_SHA=$COMMIT_SHA .
-        fi
+      
     
   # # Check changes in the saleor-dashboard directory
   # - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
