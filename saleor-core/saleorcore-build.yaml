@@ -46,5 +46,3 @@ steps:
 
 
 
-substitutions:
-  _SHORT_SHA: '${SHORT_SHA}'

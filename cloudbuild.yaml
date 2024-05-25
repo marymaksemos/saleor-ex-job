@@ -7,7 +7,7 @@ steps:
       - '-c'
       - |
        
-            gcloud builds submit --config ./saleor-core/saleorcore-build.yaml --substitutions=COMMIT_SHA=$COMMIT_SHA .
+            gcloud builds submit --config saleor-core/saleorcore-build.yaml  .
       
     
   # Check changes in the saleor-dashboard directory
@@ -16,7 +16,7 @@ steps:
     args:
       - '-c'
       - |
-          gcloud builds submit --config saleor-dashboard/dashboard-build.yaml --substitutions=COMMIT_SHA=$COMMIT_SHA .
+          gcloud builds submit --config saleor-dashboard/dashboard-build.yaml  .
         
 
   # Check changes in the saleor-storefront directory
@@ -25,6 +25,7 @@ steps:
     args:
       - '-c'
       - |
-          gcloud builds submit --config saleor-storefront/storefront-build.yaml --substitutions=COMMIT_SHA=$COMMIT_SHA .
+          gcloud builds submit --config saleor-storefront/storefront-build.yaml  .
+${SHORT_SHA}
 substitutions:
-  _SHORT_SHA: '${SHORT_SHA}'
+  _SHORT_SHA: 'latest'
