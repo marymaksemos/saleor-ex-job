@@ -37,3 +37,5 @@ jobs:
       if: github.event_name == 'push'
       run: terraform apply -auto-approve
       working-directory: ./terraform/lab
+
+      
