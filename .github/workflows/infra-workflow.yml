@@ -1,15 +1,17 @@
 name: Deploy GCP Infra Changes
 
 on:
-  push:
-    branches:
-      - main  
-      - 'terraform/**'
-  pull_request: 
-    branches:
-      - main 
-    paths:
-      - 'terraform/**'
+    push:
+      branches:
+        - main  
+      paths:
+        - 'terraform/**'
+    pull_request:
+      branches:
+        - main 
+      paths:
+        - 'terraform/**'
+  
 
 jobs:
   terraform-validation:

@@ -1,4 +1,29 @@
 steps:
+
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'bash'
+    args:
+      - '-c'
+      - |
+        if [ "$(git rev-list --count HEAD)" -eq "1" ]; then
+          echo "This is the first commit, running all builds."
+          gcloud builds submit --config saleor-core/saleorcore-build.yaml .
+          gcloud builds submit --config saleor-dashboard/dashboard-build.yaml .
+          gcloud builds submit --config saleor-storefront/storefront-build.yaml .
+        else
+          if git diff --name-only $COMMIT_SHA^ $COMMIT_SHA | grep 'saleor-core/'; then
+            echo "Changes detected in saleor-core"
+            gcloud builds submit --config saleor-core/saleorcore-build.yaml .
+          fi
+          if git diff --name-only $COMMIT_SHA^ $COMMIT_SHA | grep 'saleor-dashboard/'; then
+            echo "Changes detected in saleor-dashboard"
+            gcloud builds submit --config saleor-dashboard/dashboard-build.yaml .
+          fi
+          if git diff --name-only $COMMIT_SHA^ $COMMIT_SHA | grep 'saleor-storefront/'; then
+            echo "Changes detected in saleor-storefront"
+            gcloud builds submit --config saleor-storefront/storefront-build.yaml .
+          fi
+        fi
   # Check changes in the saleor-core directory
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     id: 'Check Saleor Core'
