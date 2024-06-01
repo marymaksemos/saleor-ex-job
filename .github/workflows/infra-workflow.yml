@@ -5,8 +5,8 @@ on:
     branches:
       - "f/terraform"  
     paths:
-      - 'terraform/**/*.tf'  
-      
+      - 'terraform/**'  
+
 jobs:
   terraform-validator:
     runs-on: ubuntu-latest
@@ -29,22 +29,21 @@ jobs:
 
       - name: "Terraform format"
         run: |
-          cd terraform  # Adjusted from 'terraform/lab' to 'terraform' based on your paths configuration
-          terraform fmt  # Automatically updates configurations to canonical format
-
+          cd terraform/lab  
+          terraform fmt  
       - name: "Terraform init"
         run: |
-          cd terraform  # Ensure working directory is correct
-          terraform init -input=false  # Initialize Terraform without user input
+          cd terraform/lab
+          terraform init -input=false  
 
       - name: "Terraform plan"
         if: ${{ github.event_name == 'push' }}
         run: |
-          cd terraform
-          terraform plan -input=false -no-color  # Outputs the execution plan in a format that's easier to read in logs
+          cd terraform/lab
+          terraform plan -input=false -no-color  
 
       - name: "Terraform apply"
         if: ${{ github.ref == 'refs/heads/f/terraform' && github.event_name == 'push' }}
         run: |
-          cd terraform
-          terraform apply -input=false -auto-approve  # Applies changes automatically without waiting for user approval
+          cd terraform/lab
+          terraform apply -input=false -auto-approve 
