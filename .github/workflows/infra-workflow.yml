@@ -10,6 +10,15 @@ on:
 jobs:
   terraform-validator:
     runs-on: ubuntu-latest
+    env:
+        PROJECT_ID: ${{ secrets.PROJECT_ID }}
+        GITHUB_TOKEN: ${{ secrets.MYGITHUB_TOKEN }}
+        PROJECT_NUMBER: ${{ secrets.PROJECT_NUMBER }}
+        GITHUB_PAT: ${{ secrets.MYGITHUB_PAT }}
+        APP_INSTALLATION_ID: ${{ secrets.APP_INSTALLATION_ID }}
+        REGION: ${{ secrets.REGION }}
+        REPO_NAME: ${{ secrets.REPO_NAME }}
+        NETWORK_NAME: ${{ secrets.NETWORK_NAME }}
     steps:
       - name: "Checkout"
         uses: actions/checkout@v2
