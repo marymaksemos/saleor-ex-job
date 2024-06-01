@@ -10,24 +10,16 @@ steps:
           gcloud builds submit --config saleor-dashboard/dashboard-build.yaml .
           gcloud builds submit --config saleor-storefront/storefront-build.yaml .
         else
-          echo "Checking for changes in specific directories..."
-          CHANGED=false
           if git diff --name-only $COMMIT_SHA^ $COMMIT_SHA | grep 'saleor-core/'; then
             echo "Changes detected in saleor-core"
             gcloud builds submit --config saleor-core/saleorcore-build.yaml .
-            CHANGED=true
           fi
           if git diff --name-only $COMMIT_SHA^ $COMMIT_SHA | grep 'saleor-dashboard/'; then
             echo "Changes detected in saleor-dashboard"
             gcloud builds submit --config saleor-dashboard/dashboard-build.yaml .
-            CHANGED=true
           fi
           if git diff --name-only $COMMIT_SHA^ $COMMIT_SHA | grep 'saleor-storefront/'; then
             echo "Changes detected in saleor-storefront"
             gcloud builds submit --config saleor-storefront/storefront-build.yaml .
-            CHANGED=true
-          fi
-          if [ "$CHANGED" = false ]; then
-            echo "No relevant changes detected."
           fi
         fi
