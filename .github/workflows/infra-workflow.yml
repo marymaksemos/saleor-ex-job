@@ -37,6 +37,12 @@ jobs:
           cd terraform/lab
           terraform init -input=false  
 
+      - name: "Terraform validate"
+        run: |
+            cd terraform/lab
+            terraform validate
+        
+
       - name: "Terraform plan"
         run: |
             cd terraform/lab
