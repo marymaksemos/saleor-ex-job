@@ -5,8 +5,8 @@ on:
     branches:
       - "f/terraform"  
     paths:
-      - 'terraform/*.tf'
-
+      - 'terraform/**/*.tf'  
+      
 jobs:
   terraform-validator:
     runs-on: ubuntu-latest
@@ -14,7 +14,7 @@ jobs:
       - name: "Checkout"
         uses: actions/checkout@v2
         with:
-          fetch-depth: 2
+          fetch-depth: 2  
 
       - name: 'Setup Google Cloud Credentials'
         uses: google-github-actions/setup-gcloud@v0.2.1
@@ -25,26 +25,26 @@ jobs:
       - name: "Setup Terraform"
         uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: 1.5.7
+          terraform_version: 1.5.7  
 
       - name: "Terraform format"
         run: |
-          cd terraform/lab
-          terraform fmt
+          cd terraform  # Adjusted from 'terraform/lab' to 'terraform' based on your paths configuration
+          terraform fmt  # Automatically updates configurations to canonical format
 
       - name: "Terraform init"
         run: |
-          cd terraform/lab
-          terraform init -input=false
+          cd terraform  # Ensure working directory is correct
+          terraform init -input=false  # Initialize Terraform without user input
 
       - name: "Terraform plan"
         if: ${{ github.event_name == 'push' }}
         run: |
-          cd terraform/lab
-          terraform plan -input=false -no-color
+          cd terraform
+          terraform plan -input=false -no-color  # Outputs the execution plan in a format that's easier to read in logs
 
       - name: "Terraform apply"
         if: ${{ github.ref == 'refs/heads/f/terraform' && github.event_name == 'push' }}
         run: |
-          cd terraform/lab
-          terraform apply -input=false -auto-approve
+          cd terraform
+          terraform apply -input=false -auto-approve  # Applies changes automatically without waiting for user approval
