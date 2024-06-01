@@ -16,7 +16,7 @@ steps:
 
 # Build and push the backend Docker image if the backend has changed
 - name: 'gcr.io/cloud-builders/docker'
-  id: 'build-api'
+  id: 'build-and-push-image-saleorcore'
   entrypoint: 'sh'
   args:
     - '-c'
