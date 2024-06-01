@@ -3,12 +3,16 @@ name: Deploy GCP Infra Changes
 on:
   push:
     branches:
-      - "f/terraform"  
+      - main  
+      - 'terraform/**'
+  pull_request: 
+    branches:
+      - main 
     paths:
-      - 'terraform/**'  
+      - 'terraform/**'
 
 jobs:
-  terraform-validator:
+  terraform-validation:
     runs-on: ubuntu-latest
     
     steps:
@@ -39,30 +43,31 @@ jobs:
 
       - name: "Terraform validate"
         run: |
-            cd terraform/lab
-            terraform validate
-        
+          cd terraform/lab
+          terraform validate
 
       - name: "Terraform plan"
+        if: github.event_name == 'pull_request'
         run: |
-            cd terraform/lab
-            terraform plan -var="mygithub_token=${{ secrets.MYGITHUB_TOKEN }}" \
-                            -var="project_id=${{ secrets.PROJECT_ID }}" \
-                            -var="project_number=${{ secrets.PROJECT_NUMBER }}" \
-                            -var="mygithub_pat=${{ secrets.MYGITHUB_PAT }}" \
-                            -var="app_installation_id=${{ secrets.APP_INSTALLATION_ID }}" \
-                            -var="region=${{ secrets.REGION }}" \
-                            -var="repo_name=${{ secrets.REPO_NAME }}" \
-                            -var="network_name=${{ secrets.NETWORK_NAME }}"
+          cd terraform/lab
+          terraform plan -var="mygithub_token=${{ secrets.MYGITHUB_TOKEN }}" \
+                          -var="project_id=${{ secrets.PROJECT_ID }}" \
+                          -var="project_number=${{ secrets.PROJECT_NUMBER }}" \
+                          -var="mygithub_pat=${{ secrets.MYGITHUB_PAT }}" \
+                          -var="app_installation_id=${{ secrets.APP_INSTALLATION_ID }}" \
+                          -var="region=${{ secrets.REGION }}" \
+                          -var="repo_name=${{ secrets.REPO_NAME }}" \
+                          -var="network_name=${{ secrets.NETWORK_NAME }}"
+
       - name: "Terraform apply"
-        if: ${{ github.ref == 'refs/heads/f/terraform' && github.event_name == 'push' }}
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
-            cd terraform/lab
-            terraform apply -auto-approve -var="mygithub_token=${{ secrets.MYGITHUB_TOKEN }}" \
-                                                        -var="project_id=${{ secrets.PROJECT_ID }}" \
-                                                        -var="project_number=${{ secrets.PROJECT_NUMBER }}" \
-                                                        -var="mygithub_pat=${{ secrets.MYGITHUB_PAT }}" \
-                                                        -var="app_installation_id=${{ secrets.APP_INSTALLATION_ID }}" \
-                                                        -var="region=${{ secrets.REGION }}" \
-                                                        -var="repo_name=${{ secrets.REPO_NAME }}" \
-                                                        -var="network_name=${{ secrets.NETWORK_NAME }}"
+          cd terraform/lab
+          terraform apply -auto-approve -var="mygithub_token=${{ secrets.MYGITHUB_TOKEN }}" \
+                                                      -var="project_id=${{ secrets.PROJECT_ID }}" \
+                                                      -var="project_number=${{ secrets.PROJECT_NUMBER }}" \
+                                                      -var="mygithub_pat=${{ secrets.MYGITHUB_PAT }}" \
+                                                      -var="app_installation_id=${{ secrets.APP_INSTALLATION_ID }}" \
+                                                      -var="region=${{ secrets.REGION }}" \
+                                                      -var="repo_name=${{ secrets.REPO_NAME }}" \
+                                                      -var="network_name=${{ secrets.NETWORK_NAME }}"
