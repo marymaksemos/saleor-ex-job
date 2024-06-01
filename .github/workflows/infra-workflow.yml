@@ -48,7 +48,6 @@ jobs:
                             -var="region=${{ secrets.REGION }}" \
                             -var="repo_name=${{ secrets.REPO_NAME }}" \
                             -var="network_name=${{ secrets.NETWORK_NAME }}"
-
       - name: "Terraform apply"
         if: ${{ github.ref == 'refs/heads/f/terraform' && github.event_name == 'push' }}
         run: |
