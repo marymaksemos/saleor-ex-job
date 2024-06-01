@@ -1,49 +1,73 @@
-name: Deploy Infrastructure Changes
+name: Deploy GCP Infra Changes
 
 on:
   push:
     branches:
-      - "main"
-    paths:
-      - 'terraform/lab/**/*.tf'
-  pull_request:
+      - main  
+      - 'terraform/**'
+  pull_request: 
     branches:
-      - "main"
+      - main 
     paths:
-      - 'terraform/lab/**/*.tf'
+      - 'terraform/**'
 
 jobs:
-  terraform:
+  terraform-validation:
     runs-on: ubuntu-latest
-    environment: production
-    defaults:
-      run:
-        working-directory: terraform/lab
-
+    
     steps:
-      - name: Checkout
+      - name: "Checkout"
         uses: actions/checkout@v2
-
-      - name: Authenticate to Google Cloud
-        uses: google-github-actions/auth@v0
         with:
-          credentials_json: ${{ secrets.GCP_SA_KEY }}
+          fetch-depth: 2  
 
-      - name: Set up Terraform
+      - name: 'Setup Google Cloud Credentials'
+        uses: google-github-actions/setup-gcloud@v0.2.1
+        with:
+          service_account_key: ${{ secrets.GCP_SA_ACTION }}
+          export_default_credentials: true
+
+      - name: "Setup Terraform"
         uses: hashicorp/setup-terraform@v1
         with:
-          terraform_version: '1.5.7'
+          terraform_version: 1.5.7  
 
-      - name: Terraform Format
-        run: terraform fmt -check
+      - name: "Terraform format"
+        run: |
+          cd terraform/lab  
+          terraform fmt  
+      - name: "Terraform init"
+        run: |
+          cd terraform/lab
+          terraform init -input=false  
 
-      - name: Terraform Init
-        run: terraform init
+      - name: "Terraform validate"
+        run: |
+          cd terraform/lab
+          terraform validate
 
-      - name: Terraform Plan
+      - name: "Terraform plan"
         if: github.event_name == 'pull_request'
-        run: terraform plan -out=tfplan
+        run: |
+          cd terraform/lab
+          terraform plan -var="mygithub_token=${{ secrets.MYGITHUB_TOKEN }}" \
+                          -var="project_id=${{ secrets.PROJECT_ID }}" \
+                          -var="project_number=${{ secrets.PROJECT_NUMBER }}" \
+                          -var="mygithub_pat=${{ secrets.MYGITHUB_PAT }}" \
+                          -var="app_installation_id=${{ secrets.APP_INSTALLATION_ID }}" \
+                          -var="region=${{ secrets.REGION }}" \
+                          -var="repo_name=${{ secrets.REPO_NAME }}" \
+                          -var="network_name=${{ secrets.NETWORK_NAME }}"
 
-      - name: Terraform Apply
-        if: github.ref == 'refs/heads/main'
-        run: terraform apply -input=false -auto-approve tfplan
+      - name: "Terraform apply"
+        if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+        run: |
+          cd terraform/lab
+          terraform apply -auto-approve -var="mygithub_token=${{ secrets.MYGITHUB_TOKEN }}" \
+                                                      -var="project_id=${{ secrets.PROJECT_ID }}" \
+                                                      -var="project_number=${{ secrets.PROJECT_NUMBER }}" \
+                                                      -var="mygithub_pat=${{ secrets.MYGITHUB_PAT }}" \
+                                                      -var="app_installation_id=${{ secrets.APP_INSTALLATION_ID }}" \
+                                                      -var="region=${{ secrets.REGION }}" \
+                                                      -var="repo_name=${{ secrets.REPO_NAME }}" \
+                                                      -var="network_name=${{ secrets.NETWORK_NAME }}"

@@ -116,3 +116,19 @@ resource "google_project_iam_member" "cloud_build_admin" {
   member  = "serviceAccount:${google_service_account.github_identity.email}"
 }
 
+# Grant the service account permissions to read objects from all buckets in the project
+resource "google_project_iam_member" "storage_object_viewer" {
+  project = var.project_id
+  role    = "roles/storage.objectViewer"
+  member  = "serviceAccount:${google_service_account.github_identity.email}"
+}
+
+# Grant the service account permissions to create and overwrite objects in all buckets in the project
+resource "google_project_iam_member" "storage_object_creator" {
+  project = var.project_id
+  role    = "roles/storage.objectCreator"
+  member  = "serviceAccount:${google_service_account.github_identity.email}"
+}
+
+
+
