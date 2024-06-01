@@ -1,23 +1,30 @@
 steps:
-
+  # Check changes in the saleor-core directory
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     id: 'Check Saleor Core'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
-       
-            gcloud builds submit --config saleor-core/saleorcore-build.yaml .
-      
-    
+        if git diff --name-only $COMMIT_SHA^ $COMMIT_SHA | grep 'saleor-core/'; then
+          echo "Changes detected in saleor-core"
+          gcloud builds submit --config saleor-core/saleorcore-build.yaml .
+        else
+          echo "No changes detected in saleor-core"
+        fi
+
   # Check changes in the saleor-dashboard directory
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: 'bash'
     args:
       - '-c'
       - |
+        if git diff --name-only $COMMIT_SHA^ $COMMIT_SHA | grep 'saleor-dashboard/'; then
+          echo "Changes detected in saleor-dashboard"
           gcloud builds submit --config saleor-dashboard/dashboard-build.yaml .
-        
+        else
+          echo "No changes detected in saleor-dashboard"
+        fi
 
   # Check changes in the saleor-storefront directory
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
@@ -25,4 +32,9 @@ steps:
     args:
       - '-c'
       - |
-          gcloud builds submit --config saleor-storefront/storefront-build.yaml  .
+        if git diff --name-only $COMMIT_SHA^ $COMMIT_SHA | grep 'saleor-storefront/'; then
+          echo "Changes detected in saleor-storefront"
+          gcloud builds submit --config saleor-storefront/storefront-build.yaml .
+        else
+          echo "No changes detected in saleor-storefront"
+        fi
