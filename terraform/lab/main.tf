@@ -41,7 +41,7 @@
       source = "../modules/github"
       repo_name            = var.repo_name
       project_id           = var.project_id
-      github_token         = var.github_token
+      github_token         = var.mygithub_token
       github_username      = local.github_username
     
     }
@@ -94,9 +94,9 @@ module "github_cloud_build" {
   source = "../modules/cloudbuild"
 
  project_id          = var.project_id
-  github_token        = var.github_token
+  github_token        = var.mygithub_token
   project_number      = var.project_number
-  github_pat          = var.github_pat
+  github_pat          = var.mygithub_pat
   app_installation_id = var.app_installation_id
   region              = var.region
   vpc_network_name    = var.network_name

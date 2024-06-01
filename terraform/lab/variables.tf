@@ -1,4 +1,4 @@
-variable "github_token" {
+variable "mygithub_token" {
   description = "GitHub API token used for GitHub integration"
   type        = string
 }
@@ -11,7 +11,7 @@ variable "project_number" {
   description = "The project number in Google Cloud"
 }
 
-variable "github_pat" {
+variable "mygithub_pat" {
   description = "GitHub Personal Access Token"
 }
 
