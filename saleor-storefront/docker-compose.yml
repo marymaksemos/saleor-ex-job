@@ -2,8 +2,8 @@ version: "3"
 
 services:
   shivashish-storefront:
-    container_name: saleorstorefront
-    image: aaleor-storefront:$TAG
+    container_name: shivashish-storefront
+    image: ghcr.io/reinventex/shivashish-storefront:$TAG
     platform: linux/amd64
     build:
       dockerfile: Dockerfile
@@ -14,10 +14,10 @@ services:
     ports:
       - 3000:3000
     networks:
-      - saleorstorefront_network
+      - allistore_network
 
   # Add more containers below (nginx, postgres, etc.)
 
 networks:
- saleorstorefront_network:
+ allistore_network:
     external: false
