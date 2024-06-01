@@ -5,7 +5,7 @@ on:
     branches:
       - "f/terraform"  
     paths:
-      - 'terraform/lab/**/*.tf'
+      - 'terraform/*.tf'
 
 jobs:
   terraform-validator:
