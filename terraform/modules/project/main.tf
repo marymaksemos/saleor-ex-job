@@ -122,6 +122,30 @@ resource "google_project_iam_binding" "viewer" {
   ]
 }
 
+
+# Ensure Cloud Build and GitHub service accounts have access to the Terraform state bucket specifically
+resource "google_storage_bucket_iam_binding" "terraform_state_bucket_admin" {
+  bucket = google_storage_bucket.terraform_state.name
+  role   = "roles/storage.admin"
+  members = [
+    "serviceAccount:${google_project.project.number}@cloudbuild.gserviceaccount.com",
+    # Assuming GitHub service account follows similar pattern or add actual service account email
+    "serviceAccount:github-sa@${google_project.project.project_id}.iam.gserviceaccount.com"
+  ]
+}
+
+# Ensure these accounts can also view all buckets in the project (adjust if too permissive)
+resource "google_project_iam_binding" "bucket_viewer_all" {
+  project = google_project.project.project_id
+  role    = "roles/storage.objectViewer"
+  members = [
+    "serviceAccount:${google_project.project.number}@cloudbuild.gserviceaccount.com",
+    "serviceAccount:github-sa@${google_project.project.project_id}.iam.gserviceaccount.com"
+  ]
+}
+
+
+
 resource "google_project_service" "secret_manager" {
   service = "secretmanager.googleapis.com"
   project = google_project.project.project_id
