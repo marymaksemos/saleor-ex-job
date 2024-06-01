@@ -10,15 +10,6 @@ on:
 jobs:
   terraform-validator:
     runs-on: ubuntu-latest
-    env:
-        PROJECT_ID: ${{ secrets.PROJECT_ID }}
-        GITHUB_TOKEN: ${{ secrets.MYGITHUB_TOKEN }}
-        PROJECT_NUMBER: ${{ secrets.PROJECT_NUMBER }}
-        GITHUB_PAT: ${{ secrets.MYGITHUB_PAT }}
-        APP_INSTALLATION_ID: ${{ secrets.APP_INSTALLATION_ID }}
-        REGION: ${{ secrets.REGION }}
-        REPO_NAME: ${{ secrets.REPO_NAME }}
-        NETWORK_NAME: ${{ secrets.NETWORK_NAME }}
     steps:
       - name: "Checkout"
         uses: actions/checkout@v2
@@ -28,7 +19,7 @@ jobs:
       - name: 'Setup Google Cloud Credentials'
         uses: google-github-actions/setup-gcloud@v0.2.1
         with:
-          service_account_key: ${{ secrets.GCP_SA_ACTION }}
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
 
       - name: "Setup Terraform"
@@ -40,19 +31,33 @@ jobs:
         run: |
           cd terraform/lab  
           terraform fmt  
+
       - name: "Terraform init"
         run: |
           cd terraform/lab
           terraform init -input=false  
 
       - name: "Terraform plan"
-        if: ${{ github.event_name == 'push' }}
         run: |
           cd terraform/lab
-          terraform plan -input=false -no-color  
+          terraform plan -var="mygithub_token=${{ secrets.MYGITHUB_TOKEN }}" \
+                          -var="project_id=${{ secrets.PROJECT_ID }}" \
+                          -var="project_number=${{ secrets.PROJECT_NUMBER }}" \
+                          -var="mygithub_pat=${{ secrets.MYGITHUB_PAT }}" \
+                          -var="app_installation_id=${{ secrets.APP_INSTALLATION_ID }}" \
+                          -var="region=${{ secrets.REGION }}" \
+                          -var="repo_name=${{ secrets.REPO_NAME }}" \
+                          -var="network_name=${{ secrets.NETWORK_NAME }}"
 
       - name: "Terraform apply"
         if: ${{ github.ref == 'refs/heads/f/terraform' && github.event_name == 'push' }}
         run: |
           cd terraform/lab
-          terraform apply -input=false -auto-approve 
+          terraform apply -auto-approve -var="mygithub_token=${{ secrets.MYGITHUB_TOKEN }}" \
+                                                      -var="project_id=${{ secrets.PROJECT_ID }}" \
+                                                      -var="project_number=${{ secrets.PROJECT_NUMBER }}" \
+                                                      -var="mygithub_pat=${{ secrets.MYGITHUB_PAT }}" \
+                                                      -var="app_installation_id=${{ secrets.APP_INSTALLATION_ID }}" \
+                                                      -var="region=${{ secrets.REGION }}" \
+                                                      -var="repo_name=${{ secrets.REPO_NAME }}" \
+                                                      -var="network_name=${{ secrets.NETWORK_NAME }}"

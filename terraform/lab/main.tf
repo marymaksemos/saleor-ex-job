@@ -105,7 +105,3 @@ module "github_cloud_build" {
   repo_name           = "saleor-ex-job"
 }
 
-
-
-
-
