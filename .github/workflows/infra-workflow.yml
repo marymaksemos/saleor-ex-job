@@ -2,15 +2,10 @@ name: Deploy GCP Infra Changes
 
 on:
   push:
+    branches:
+      - "f/terraform"  # Ensure branch name is correctly specified without trailing spaces
     paths:
       - 'terraform/lab/**/*.tf'
-    branches:
-      - "f/terraform "
-#   pull_request:
-#     branches:
-#       - "main"
-#     paths:
-#       - 'terraform/lab/**/*.tf'
 
 jobs:
   terraform-validator:
@@ -33,7 +28,7 @@ jobs:
           terraform_version: 1.5.7
 
       - name: "Terraform format"
-        run: |git
+        run: |
           cd terraform/lab
           terraform fmt
 
