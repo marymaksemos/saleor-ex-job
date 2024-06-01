@@ -4,21 +4,25 @@ steps:
     args:
       - '-c'
       - |
+        echo "Current commit: $COMMIT_SHA"
+        git fetch --depth=2  # Ensure we have enough history for diff
         if [ "$(git rev-list --count HEAD)" -eq "1" ]; then
           echo "This is the first commit, running all builds."
           gcloud builds submit --config saleor-core/saleorcore-build.yaml .
           gcloud builds submit --config saleor-dashboard/dashboard-build.yaml .
           gcloud builds submit --config saleor-storefront/storefront-build.yaml .
         else
-          if git diff --name-only $COMMIT_SHA^ $COMMIT_SHA | grep 'saleor-core/'; then
+          CHANGED_FILES=$(git diff --name-only $COMMIT_SHA^ $COMMIT_SHA)
+          echo "Changed files: $CHANGED_FILES"
+          if echo "$CHANGED_FILES" | grep -E '^saleor-core/'; then
             echo "Changes detected in saleor-core"
             gcloud builds submit --config saleor-core/saleorcore-build.yaml .
           fi
-          if git diff --name-only $COMMIT_SHA^ $COMMIT_SHA | grep 'saleor-dashboard/'; then
+          if echo "$CHANGED_FILES" | grep -E '^saleor-dashboard/'; then
             echo "Changes detected in saleor-dashboard"
             gcloud builds submit --config saleor-dashboard/dashboard-build.yaml .
           fi
-          if git diff --name-only $COMMIT_SHA^ $COMMIT_SHA | grep 'saleor-storefront/'; then
+          if echo "$CHANGED_FILES" | grep -E '^saleor-storefront/'; then
             echo "Changes detected in saleor-storefront"
             gcloud builds submit --config saleor-storefront/storefront-build.yaml .
           fi
