@@ -104,4 +104,3 @@ module "github_cloud_build" {
   location            = "global"
   repo_name           = "saleor-ex-job"
 }
-
