@@ -3,7 +3,7 @@ name: Deploy GCP Infra Changes
 on:
   push:
     branches:
-      - "f/terraform"  # Ensure branch name is correctly specified without trailing spaces
+      - "f/terraform"  
     paths:
       - 'terraform/lab/**/*.tf'
 
