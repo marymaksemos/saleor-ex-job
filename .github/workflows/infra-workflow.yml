@@ -1,39 +1,55 @@
-name: Terraform Workflow
+name: Deploy GCP Infra Changes
 
 on:
-  pull_request:
-    branches:
-      - main
-    paths:
-      - 'terraform/**' 
   push:
-    branches:
-      - main
     paths:
-      - 'terraform/**'
+      - 'terraform/lab/**/*.tf'
+    branches:
+      - "f/terraform "
+#   pull_request:
+#     branches:
+#       - "main"
+#     paths:
+#       - 'terraform/lab/**/*.tf'
 
 jobs:
-  terraform:
-    name: Terraform
+  terraform-validator:
     runs-on: ubuntu-latest
-
     steps:
-    - name: Checkout Code
-      uses: actions/checkout@v2
+      - name: "Checkout"
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 2
 
-    - name: Setup Terraform
-      uses: hashicorp/setup-terraform@v1
-      with:
-        terraform_version: '1.0.0' 
+      - name: 'Setup Google Cloud Credentials'
+        uses: google-github-actions/setup-gcloud@v0.2.1
+        with:
+          service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: true
 
-    - name: Terraform Init
-      run: terraform init
-      working-directory: ./terraform/lab
-    - name: Terraform Plan
-      if: github.event_name == 'pull_request'
-      run: terraform plan
-      working-directory: ./terraform/lab 
-    - name: Terraform Apply
-      if: github.event_name == 'push'
-      run: terraform apply -auto-approve
-      working-directory: ./terraform/lab
+      - name: "Setup Terraform"
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: 1.5.7
+
+      - name: "Terraform format"
+        run: |
+          cd terraform/lab
+          terraform fmt
+
+      - name: "Terraform init"
+        run: |
+          cd terraform/lab
+          terraform init -input=false
+
+      - name: "Terraform plan"
+        if: ${{ github.event_name == 'push' }}
+        run: |
+          cd terraform/lab
+          terraform plan -input=false -no-color
+
+      - name: "Terraform apply"
+        if: ${{ github.ref == 'refs/heads/f/terraform' && github.event_name == 'push' }}
+        run: |
+          cd terraform/lab
+          terraform apply -input=false -auto-approve
