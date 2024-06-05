@@ -82,4 +82,3 @@ To deploy and use the e-commerce platform, follow these steps:
 ## Conclusion
 The deployment of the Saleor e-commerce platform on GKE proved successful, showcasing a scalable, reliable, and cost-effective solution for e-commerce platforms.
 
-
