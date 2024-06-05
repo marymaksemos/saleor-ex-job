@@ -5,7 +5,7 @@ steps:
       - '-c'
       - |
         echo "Current commit: $COMMIT_SHA"
-        git fetch --depth=2  # Ensure we have enough history for diff
+        git fetch --depth=2  
         if [ "$(git rev-list --count HEAD)" -eq "1" ]; then
           echo "This is the first commit, running all builds."
           gcloud builds submit --config saleor-core/saleorcore-build.yaml
