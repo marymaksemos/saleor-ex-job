@@ -53,27 +53,30 @@ jobs:
         run: |
           cd terraform/lab
           terraform plan  -var="mygithub_token=${{ secrets.MYGITHUB_TOKEN }}" \
-          -var="project_id=${{ secrets.PROJECT_ID }}" \
-          -var="project_number=${{ secrets.PROJECT_NUMBER }}" \
-          -var="mygithub_pat=${{ secrets.MYGITHUB_PAT }}" \
-          -var="app_installation_id=${{ secrets.APP_INSTALLATION_ID }}" \
-          -var="region=${{ secrets.REGION }}" \
-          -var="repo_name=${{ secrets.REPO_NAME }}" \
-          -var="network_name=${{ secrets.NETWORK_NAME }}" \
-          -var="phone_number=${{ secrets.PHONE_NUMBER }}" \
-          -var="alerts_channel=${{ secrets.ALERTS_CHANNEL }}" \
-          -var='monitor_urls={"default":{"url":"allistore.uk","path":"/","appName":"saleor"}}'
+                          -var="project_id=${{ secrets.PROJECT_ID }}" \
+                          -var="project_number=${{ secrets.PROJECT_NUMBER }}" \
+                          -var="mygithub_pat=${{ secrets.MYGITHUB_PAT }}" \
+                          -var="app_installation_id=${{ secrets.APP_INSTALLATION_ID }}" \
+                          -var="region=${{ secrets.REGION }}" \
+                          -var="repo_name=${{ secrets.REPO_NAME }}" \
+                          -var="network_name=${{ secrets.NETWORK_NAME }}" \
+                          -var="phone_number=${{ secrets.PHONE_NUMBER }}" \
+                          -var="alerts_channel=${{ secrets.ALERTS_CHANNEL }}" \
+                          -var='monitor_urls={"default":{"url":"allistore.uk","path":"/","appName":"saleor"}}'
 
 
       - name: "Terraform apply"
         if: github.ref == 'refs/heads/main' && github.event_name == 'push'
         run: |
           cd terraform/lab
-          terraform apply -auto-approve -var="mygithub_token=${{ secrets.MYGITHUB_TOKEN }}" \
-                                                      -var="project_id=${{ secrets.PROJECT_ID }}" \
-                                                      -var="project_number=${{ secrets.PROJECT_NUMBER }}" \
-                                                      -var="mygithub_pat=${{ secrets.MYGITHUB_PAT }}" \
-                                                      -var="app_installation_id=${{ secrets.APP_INSTALLATION_ID }}" \
-                                                      -var="region=${{ secrets.REGION }}" \
-                                                      -var="repo_name=${{ secrets.REPO_NAME }}" \
-                                                      -var="network_name=${{ secrets.NETWORK_NAME }}"
+          terraform apply -auto-approve  -var="mygithub_token=${{ secrets.MYGITHUB_TOKEN }}" \
+                                        -var="project_id=${{ secrets.PROJECT_ID }}" \
+                                        -var="project_number=${{ secrets.PROJECT_NUMBER }}" \
+                                        -var="mygithub_pat=${{ secrets.MYGITHUB_PAT }}" \
+                                        -var="app_installation_id=${{ secrets.APP_INSTALLATION_ID }}" \
+                                        -var="region=${{ secrets.REGION }}" \
+                                        -var="repo_name=${{ secrets.REPO_NAME }}" \
+                                        -var="network_name=${{ secrets.NETWORK_NAME }}" \
+                                        -var="phone_number=${{ secrets.PHONE_NUMBER }}" \
+                                        -var="alerts_channel=${{ secrets.ALERTS_CHANNEL }}" \
+                                        -var='monitor_urls={"default":{"url":"allistore.uk","path":"/","appName":"saleor"}}'

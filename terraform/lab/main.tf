@@ -111,4 +111,3 @@ module "gcp_monitoring_setup" {
   monitor_urls      = var.monitor_urls
   phone_number      = var.phone_number
 }
-
