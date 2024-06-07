@@ -107,13 +107,8 @@ module "github_cloud_build" {
 module "gcp_monitoring_setup" {
   source            = "../modules/uptime_monitor"
   project_id        = var.project_id
-  alerts_channel    = "saleor"
- monitor_urls= {
-  default     = {
-    url     = "allistore.uk"
-    path    = "/"
-    appName = "saleor"
-  }
+  alerts_channel    = var.alerts_channel
+  monitor_urls      = var.monitor_urls
+  phone_number      = var.phone_number
 }
-  phone_number      ="0737796897"
-}
+
