@@ -104,4 +104,10 @@ module "github_cloud_build" {
   location            = "global"
   repo_name           = "saleor-ex-job"
 }
-
+module "gcp_monitoring_setup" {
+  source            = "../modules/uptime_monitor"
+  project_id        = var.project_id
+  alerts_channel    = var.alerts_channel
+  monitor_urls      = var.monitor_urls
+  phone_number      = var.phone_number
+}
