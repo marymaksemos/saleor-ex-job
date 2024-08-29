@@ -12,12 +12,10 @@ Tom
 ## Table of Contents
 1. [Introduction](#introduction)
 2. [Method and Implementation](#method-and-implementation)
-3. [Results](#results)
-4. [Discussion](#discussion)
-5. [How to Use](#how-to-use)
-6. [References](#references)
-7. [Appendices](#appendices)
-8. [Conclusion](#conclusion)
+3. [How to Use](#how-to-use)
+4. [References](#references)
+5. [Appendices](#appendices)
+6. [Conclusion](#conclusion)
 
 ## Introduction
 This implementation leverages essential DevOps tools and practices to enhance operational efficiency and scalability, resulting in significant reductions in setup and maintenance costs.
@@ -43,12 +41,6 @@ Focuses on the use of GKE and Saleor, excluding other cloud providers and e-comm
 - **Google Cloud Build**: Facilitates continuous integration and delivery.
 - **Cloudflare**: Manages DNS and enhances security.
 - **Google Cloud Monitoring**: Maintains operational performance through proactive monitoring.
-
-## Results
-(Results of the deployment detailing performance metrics and user feedback)
-
-## Discussion
-Highlights the challenges faced during the project, such as infrastructure setup and continuous integration, along with the achievements like scalability and efficiency enhancements.
 
 ## How to Use
 To deploy and use the e-commerce platform, follow these steps:
